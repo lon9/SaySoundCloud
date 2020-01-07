@@ -23,12 +23,20 @@ func (uc *UserController) Show(c echo.Context) (err error) {
 	if err := user.FindByUID(uid); err != nil {
 		return c.JSON(
 			http.StatusBadRequest,
-			newResponse(http.StatusBadRequest, http.StatusText(http.StatusBadRequest), nil),
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
 		)
 	}
 	return c.JSON(
 		http.StatusOK,
-		newResponse(http.StatusOK, http.StatusText(http.StatusOK), user),
+		newResponse(
+			http.StatusOK,
+			http.StatusText(http.StatusOK),
+			user,
+		),
 	)
 }
 
@@ -49,18 +57,30 @@ func (uc *UserController) Update(c echo.Context) (err error) {
 	if idToken.UID != user.UID {
 		return c.JSON(
 			http.StatusBadRequest,
-			newResponse(http.StatusBadRequest, http.StatusText(http.StatusBadRequest), nil),
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
 		)
 	}
 	if err := user.Update(); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			newResponse(http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError), nil),
+			newResponse(
+				http.StatusInternalServerError,
+				http.StatusText(http.StatusInternalServerError),
+				nil,
+			),
 		)
 	}
 	return c.JSON(
 		http.StatusOK,
-		newResponse(http.StatusOK, http.StatusText(http.StatusOK), user),
+		newResponse(
+			http.StatusOK,
+			http.StatusText(http.StatusOK),
+			user,
+		),
 	)
 }
 
@@ -72,7 +92,11 @@ func (uc *UserController) Destroy(c echo.Context) (err error) {
 	if idToken.UID != uid {
 		return c.JSON(
 			http.StatusBadRequest,
-			newResponse(http.StatusBadRequest, http.StatusText(http.StatusBadRequest), nil),
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
 		)
 	}
 
@@ -81,7 +105,11 @@ func (uc *UserController) Destroy(c echo.Context) (err error) {
 	if err := user.Delete(); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			newResponse(http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError), nil),
+			newResponse(
+				http.StatusInternalServerError,
+				http.StatusText(http.StatusInternalServerError),
+				nil,
+			),
 		)
 	}
 	return c.NoContent(http.StatusNoContent)
