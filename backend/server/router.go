@@ -24,5 +24,13 @@ func NewRouter() (*echo.Echo, error) {
 	router.GET("/health", healthController.Index)
 	router.GET("/secret", healthController.Secret, authMiddleware.Verify)
 
+	version := router.Group("/v1")
+
+	userController := controllers.NewUserController()
+
+	version.GET("/user/:uid", userController.Show)
+	version.PUT("/user/:uid", userController.Update, authMiddleware.Verify)
+	version.DELETE("/user/:uid", userController.Destroy, authMiddleware.Verify)
+
 	return router, nil
 }
