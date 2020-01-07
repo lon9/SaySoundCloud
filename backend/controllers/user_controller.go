@@ -36,7 +36,14 @@ func (uc *UserController) Show(c echo.Context) (err error) {
 func (uc *UserController) Update(c echo.Context) (err error) {
 	user := new(models.User)
 	if err = c.Bind(user); err != nil {
-		return
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
 	}
 	idToken := mymiddleware.ExtractClaims(c)
 	if idToken.UID != user.UID {
