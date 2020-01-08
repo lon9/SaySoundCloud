@@ -8,6 +8,7 @@ import (
 	"github.com/lon9/soundboard/backend/forms"
 	mymiddleware "github.com/lon9/soundboard/backend/middleware"
 	"github.com/lon9/soundboard/backend/models"
+	"github.com/lon9/soundboard/backend/views"
 )
 
 // UserController is controller for users
@@ -48,7 +49,7 @@ func (uc *UserController) Show(c echo.Context) (err error) {
 		newResponse(
 			http.StatusOK,
 			http.StatusText(http.StatusOK),
-			user,
+			views.NewUserView(user),
 		),
 	)
 }
@@ -96,7 +97,7 @@ func (uc *UserController) Update(c echo.Context) (err error) {
 		newResponse(
 			http.StatusOK,
 			http.StatusText(http.StatusOK),
-			user,
+			views.NewUserView(user),
 		),
 	)
 }

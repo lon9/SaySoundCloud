@@ -9,6 +9,7 @@ import (
 	"github.com/lon9/soundboard/backend/forms"
 	mymiddleware "github.com/lon9/soundboard/backend/middleware"
 	"github.com/lon9/soundboard/backend/models"
+	"github.com/lon9/soundboard/backend/views"
 	"github.com/lon9/wsrooms"
 )
 
@@ -59,32 +60,30 @@ func (ac *ApplicationController) Index(c echo.Context) (err error) {
 				),
 			)
 		}
-		return c.JSON(
-			http.StatusOK,
-			newResponse(
-				http.StatusOK,
-				http.StatusText(http.StatusOK),
-				apps,
-			),
-		)
+	} else {
+		if err := apps.List(offset, limit); err != nil {
+			return c.JSON(
+				http.StatusInternalServerError,
+				newResponse(
+					http.StatusInternalServerError,
+					http.StatusText(http.StatusInternalServerError),
+					nil,
+				),
+			)
+		}
 	}
 
-	if err := apps.List(offset, limit); err != nil {
-		return c.JSON(
-			http.StatusInternalServerError,
-			newResponse(
-				http.StatusInternalServerError,
-				http.StatusText(http.StatusInternalServerError),
-				nil,
-			),
-		)
+	ret := make([]*views.ApplicationView, len(*apps))
+	for i, app := range *apps {
+		ret[i] = views.NewApplicationView(&app)
 	}
+
 	return c.JSON(
 		http.StatusOK,
 		newResponse(
 			http.StatusOK,
 			http.StatusText(http.StatusOK),
-			apps,
+			ret,
 		),
 	)
 }
@@ -114,13 +113,36 @@ func (ac *ApplicationController) Show(c echo.Context) (err error) {
 			),
 		)
 	}
+	idToken := mymiddleware.ExtractClaims(c)
+	user := new(models.User)
+	if user.FindByUID(idToken.UID); err != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+
+	if user.ID == app.UserID {
+		return c.JSON(
+			http.StatusOK,
+			newResponse(
+				http.StatusOK,
+				http.StatusText(http.StatusOK),
+				views.NewOwnerApplicationView(app),
+			),
+		)
+	}
 
 	return c.JSON(
 		http.StatusOK,
 		newResponse(
 			http.StatusOK,
 			http.StatusText(http.StatusOK),
-			app,
+			views.NewApplicationView(app),
 		),
 	)
 }
@@ -157,7 +179,7 @@ func (ac *ApplicationController) Create(c echo.Context) (err error) {
 		newResponse(
 			http.StatusCreated,
 			http.StatusText(http.StatusCreated),
-			app,
+			views.NewOwnerApplicationView(app),
 		),
 	)
 }
@@ -205,7 +227,7 @@ func (ac *ApplicationController) Update(c echo.Context) (err error) {
 		newResponse(
 			http.StatusOK,
 			http.StatusText(http.StatusOK),
-			app,
+			views.NewOwnerApplicationView(app),
 		),
 	)
 }
