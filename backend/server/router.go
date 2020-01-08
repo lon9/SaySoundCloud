@@ -28,9 +28,9 @@ func NewRouter() (*echo.Echo, error) {
 
 	userController := controllers.NewUserController()
 
-	version.GET("/users/:uid", userController.Show)
-	version.PUT("/users/:uid", userController.Update, authMiddleware.Verify)
-	version.DELETE("/users/:uid", userController.Destroy, authMiddleware.Verify)
+	version.GET("/users/:id", userController.Show)
+	version.PUT("/users/:id", userController.Update, authMiddleware.Verify)
+	version.DELETE("/users/:id", userController.Destroy, authMiddleware.Verify)
 
 	applicationController := controllers.NewApplicationController()
 

@@ -5,3 +5,4 @@ server:
     cors:
         - "http://localhost:9000"
     firebase_config: "firebase.json"
+    access_token_secret: "114514"

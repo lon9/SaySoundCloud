@@ -6,6 +6,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
+	"github.com/lon9/soundboard/backend/forms"
 	mymiddleware "github.com/lon9/soundboard/backend/middleware"
 	"github.com/lon9/soundboard/backend/models"
 )
@@ -89,8 +90,7 @@ func (ac *ApplicationController) Index(c echo.Context) (err error) {
 
 // Show returns an application
 func (ac *ApplicationController) Show(c echo.Context) (err error) {
-	idStr := c.Param("id")
-	id, err := strconv.Atoi(idStr)
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
 		return c.JSON(
 			http.StatusBadRequest,
@@ -126,8 +126,8 @@ func (ac *ApplicationController) Show(c echo.Context) (err error) {
 
 // Create creates an application
 func (ac *ApplicationController) Create(c echo.Context) (err error) {
-	app := new(models.Application)
-	if err := c.Bind(app); err != nil {
+	appForm := new(forms.ApplicationForm)
+	if err := c.Bind(appForm); err != nil {
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -139,19 +139,8 @@ func (ac *ApplicationController) Create(c echo.Context) (err error) {
 	}
 
 	idToken := mymiddleware.ExtractClaims(c)
-	user := new(models.User)
-	if err := user.FindByUID(idToken.UID); err != nil {
-		return c.JSON(
-			http.StatusBadRequest,
-			newResponse(
-				http.StatusBadRequest,
-				http.StatusText(http.StatusBadRequest),
-				nil,
-			),
-		)
-	}
-	app.UserID = user.ID
-	if err := app.Create(); err != nil {
+	app, err := appForm.Create(idToken)
+	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			newResponse(
@@ -172,10 +161,10 @@ func (ac *ApplicationController) Create(c echo.Context) (err error) {
 	)
 }
 
-// Update updates a application
+// Update updates an application
 func (ac *ApplicationController) Update(c echo.Context) (err error) {
-	app := new(models.Application)
-	if err = c.Bind(app); err != nil {
+	appForm := new(forms.ApplicationForm)
+	if err = c.Bind(appForm); err != nil {
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -186,8 +175,8 @@ func (ac *ApplicationController) Update(c echo.Context) (err error) {
 		)
 	}
 	idToken := mymiddleware.ExtractClaims(c)
-	current := new(models.Application)
-	if err := current.FindByID(app.ID); err != nil {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -198,31 +187,8 @@ func (ac *ApplicationController) Update(c echo.Context) (err error) {
 		)
 	}
 
-	user := new(models.User)
-	if err := user.FindByUID(idToken.UID); err != nil {
-		return c.JSON(
-			http.StatusBadRequest,
-			newResponse(
-				http.StatusBadRequest,
-				http.StatusText(http.StatusBadRequest),
-				nil,
-			),
-		)
-	}
-
-	// Check the user is owner of the app
-	if user.ID != current.UserID || user.ID != app.UserID {
-		return c.JSON(
-			http.StatusBadRequest,
-			newResponse(
-				http.StatusBadRequest,
-				http.StatusText(http.StatusBadRequest),
-				nil,
-			),
-		)
-	}
-
-	if err := app.Update(); err != nil {
+	app, err := appForm.Update(uint(id), idToken)
+	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			newResponse(
@@ -245,8 +211,7 @@ func (ac *ApplicationController) Update(c echo.Context) (err error) {
 
 // Destroy destroys an application
 func (ac *ApplicationController) Destroy(c echo.Context) (err error) {
-	idStr := c.Param("id")
-	id, err := strconv.Atoi(idStr)
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
 		return c.JSON(
 			http.StatusBadRequest,
@@ -259,7 +224,42 @@ func (ac *ApplicationController) Destroy(c echo.Context) (err error) {
 	}
 
 	app := new(models.Application)
-	app.ID = uint(id)
+	if err := app.FindByID(uint(id)); err != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+
+	idToken := mymiddleware.ExtractClaims(c)
+	user := new(models.User)
+	if err := user.FindByUID(idToken.UID); err != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+
+	// authorization
+	if app.UserID != user.ID {
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+
 	if err := app.Delete(); err != nil {
 		return c.JSON(
 			http.StatusBadRequest,
