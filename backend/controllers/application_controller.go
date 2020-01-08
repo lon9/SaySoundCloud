@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 	mymiddleware "github.com/lon9/soundboard/backend/middleware"
 	"github.com/lon9/soundboard/backend/models"
@@ -29,6 +30,39 @@ func (ac *ApplicationController) Index(c echo.Context) (err error) {
 				http.StatusBadRequest,
 				http.StatusText(http.StatusBadRequest),
 				nil,
+			),
+		)
+	}
+
+	query := c.QueryParam("q")
+	if query != "" {
+		// Seach applications
+		if err := apps.SearchByName(query, offset, limit); err != nil {
+			if gorm.IsRecordNotFoundError(err) {
+				return c.JSON(
+					http.StatusNotFound,
+					newResponse(
+						http.StatusNotFound,
+						http.StatusText(http.StatusNotFound),
+						nil,
+					),
+				)
+			}
+			return c.JSON(
+				http.StatusInternalServerError,
+				newResponse(
+					http.StatusInternalServerError,
+					http.StatusText(http.StatusInternalServerError),
+					nil,
+				),
+			)
+		}
+		return c.JSON(
+			http.StatusOK,
+			newResponse(
+				http.StatusOK,
+				http.StatusText(http.StatusOK),
+				apps,
 			),
 		)
 	}
