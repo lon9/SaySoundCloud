@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"firebase.google.com/go/auth"
-	"github.com/jinzhu/gorm"
 	"github.com/lon9/soundboard/backend/models"
 )
 
