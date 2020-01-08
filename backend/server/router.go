@@ -40,5 +40,8 @@ func NewRouter() (*echo.Echo, error) {
 	version.PUT("/apps/:id", applicationController.Update, authMiddleware.Verify)
 	version.DELETE("/apps/:id", applicationController.Destroy, authMiddleware.Verify)
 
+	version.POST("/apps/:id/ws", applicationController.WSAuth)
+	version.GET("/apps/:id/ws", applicationController.WS)
+
 	return router, nil
 }

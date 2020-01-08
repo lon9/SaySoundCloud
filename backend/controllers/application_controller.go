@@ -273,3 +273,43 @@ func (ac *ApplicationController) Destroy(c echo.Context) (err error) {
 
 	return c.NoContent(http.StatusNoContent)
 }
+
+func (ac *ApplicationController) WSAuth(c echo.Context) (err error) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+}
+
+func (ac *ApplicationController) WS(c echo.Context) (err error) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+
+	app := new(models.Application)
+	if err := app.FindByID(uint(id)); err != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+}
