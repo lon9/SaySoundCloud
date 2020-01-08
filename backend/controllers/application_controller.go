@@ -9,6 +9,7 @@ import (
 	"github.com/lon9/soundboard/backend/forms"
 	mymiddleware "github.com/lon9/soundboard/backend/middleware"
 	"github.com/lon9/soundboard/backend/models"
+	"github.com/lon9/wsrooms"
 )
 
 // ApplicationController is controller for applications
@@ -274,6 +275,7 @@ func (ac *ApplicationController) Destroy(c echo.Context) (err error) {
 	return c.NoContent(http.StatusNoContent)
 }
 
+// WSAuth authenticate websocket connection
 func (ac *ApplicationController) WSAuth(c echo.Context) (err error) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
@@ -286,8 +288,39 @@ func (ac *ApplicationController) WSAuth(c echo.Context) (err error) {
 			),
 		)
 	}
+	form := new(forms.WSAuthForm)
+	if err := c.Bind(form); err != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+	token, err := form.Auth(uint(id))
+	if err != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+	return c.JSON(
+		http.StatusOK,
+		newResponse(
+			http.StatusOK,
+			http.StatusText(http.StatusOK),
+			token,
+		),
+	)
 }
 
+//WS websocket controller
 func (ac *ApplicationController) WS(c echo.Context) (err error) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
@@ -312,4 +345,25 @@ func (ac *ApplicationController) WS(c echo.Context) (err error) {
 			),
 		)
 	}
+
+	// Authorizaion
+	token := c.QueryParam("token")
+	if app.GuestAccessToken != token {
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+	conn := wsrooms.NewConnection(c.Response(), c.Request(), nil)
+	defer conn.Leave(string(app.ID))
+	if c != nil {
+		go conn.WritePump()
+		conn.Join(string(app.ID))
+		go conn.ReadPump()
+	}
+	return c.NoContent(http.StatusNoContent)
 }

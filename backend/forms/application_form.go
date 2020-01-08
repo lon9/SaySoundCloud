@@ -2,6 +2,7 @@ package forms
 
 import (
 	"errors"
+
 	"firebase.google.com/go/auth"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
@@ -102,7 +103,7 @@ func (wsf *WSAuthForm) Auth(id uint) (token string, err error) {
 	if err = app.FindByID(id); err != nil {
 		return
 	}
-	if err = bcrypt.CompareHashAndPassword(app.Password, []byte(wsf.Password)); err != nil {
+	if err = bcrypt.CompareHashAndPassword([]byte(app.Password), []byte(wsf.Password)); err != nil {
 		return
 	}
 	return app.GuestAccessToken, nil
