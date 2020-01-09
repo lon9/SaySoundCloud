@@ -1,17 +1,19 @@
+require('dotenv').config()
+
 export default {
   mode: 'universal',
   /*
    ** Headers of the page
    */
   head: {
-    title: process.env.npm_package_name || '',
+    title: process.env.APP_TITLE || '',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
         hid: 'description',
         name: 'description',
-        content: process.env.npm_package_description || ''
+        content: process.env.APP_DESCRIPTION || ''
       }
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
@@ -23,11 +25,11 @@ export default {
   /*
    ** Global CSS
    */
-  css: [],
+  css: ['firebaseui/dist/firebaseui.css'],
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: ['~/plugins/firebase'],
   /*
    ** Nuxt.js dev-modules
    */
@@ -48,7 +50,32 @@ export default {
   /*
    ** Build configuration
    */
+  env: {
+    API_KEY: process.env.API_KEY,
+    AUTH_DOMAIN: process.env.AUTH_DOMAIN,
+    DATABASE_URL: process.env.DATABASE_URL,
+    PROJECT_ID: process.env.PROJECT_ID,
+    STORAGE_BUCKET: process.env.STORAGE_BUCKET,
+    MESSAGING_SENDER_ID: process.env.MESSAGING_SENDER_ID,
+    APP_ID: process.env.APP_ID,
+    BASE_URL: process.env.BASE_URL,
+    APP_TITLE: process.env.APP_TITLE,
+    APP_DESCRIPTION: process.env.APP_DESCRIPTION
+  },
   build: {
+    babel: {
+      presets({ isServer }) {
+        return [
+          [
+            require.resolve('@nuxt/babel-preset-app'),
+            {
+              buildTarget: isServer ? 'server' : 'client',
+              corejs: { version: 3 }
+            }
+          ]
+        ]
+      }
+    },
     postcss: {
       preset: {
         features: {
