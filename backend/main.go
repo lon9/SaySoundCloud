@@ -3,7 +3,9 @@ package main
 import (
 	"flag"
 
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/lon9/soundboard/backend/config"
 	"github.com/lon9/soundboard/backend/database"
 	"github.com/lon9/soundboard/backend/models"

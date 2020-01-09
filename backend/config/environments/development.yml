@@ -1,5 +1,6 @@
 db:
-    url: "host=localhost user=postgres dbname=postgres password=114514 sslmode=disable"
+    provider: "sqlite3"
+    url: "database/dev.db"
 server:
     port: "3001"
     cors:

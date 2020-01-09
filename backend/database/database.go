@@ -11,7 +11,7 @@ var d *gorm.DB
 func Init(isReset bool, models ...interface{}) {
 	c := config.GetConfig()
 	var err error
-	d, err = gorm.Open("postgres", c.GetString("db.url"))
+	d, err = gorm.Open(c.GetString("db.provider"), c.GetString("db.url"))
 	if err != nil {
 		panic(err)
 	}
