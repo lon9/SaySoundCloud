@@ -14,10 +14,10 @@ type Application struct {
 	Password         string `json:"-"`
 	IsPassword       bool   `json:"isPassword"`
 	User             *User  `json:"user"`
-	UserID           uint   `json:"userId"`
+	UserID           uint   `json:"userId" gorm:"not null"`
 	Description      string `json:"description"`
-	AccessToken      string `json:"accessToken"`
-	GuestAccessToken string `json:"guestAccessToken"`
+	AccessToken      string `json:"accessToken" gorm:"unique;not null"`
+	GuestAccessToken string `json:"guestAccessToken" gorm:"unique;not null"`
 }
 
 // Create creates an application
@@ -30,6 +30,18 @@ func (a *Application) Create() (err error) {
 func (a *Application) FindByID(id uint) (err error) {
 	db := database.GetDB()
 	return db.Where("id = ?", id).First(a).Error
+}
+
+// FindByAccessToken finds an application by access token
+func (a *Application) FindByAccessToken(accessToken string) (err error) {
+	db := database.GetDB()
+	return db.Where("access_token = ?", accessToken).First(a).Error
+}
+
+// FindByGuestAccessToken finds an application by guest access token
+func (a *Application) FindByGuestAccessToken(guestAccessToken string) (err error) {
+	db := database.GetDB()
+	return db.Where("guest_access_token = ?", guestAccessToken).First(a).Error
 }
 
 // Update updates an application

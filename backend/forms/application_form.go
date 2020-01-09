@@ -4,9 +4,7 @@ import (
 	"errors"
 
 	"firebase.google.com/go/auth"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/google/uuid"
-	"github.com/lon9/soundboard/backend/config"
+	"github.com/jinzhu/gorm"
 	"github.com/lon9/soundboard/backend/models"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -37,30 +35,38 @@ func (af *ApplicationForm) Create(idToken *auth.Token) (ret *models.Application,
 		app.Password = string(hash)
 	}
 
+	a := new(models.Application)
 	// generate access token
-	token := jwt.NewWithClaims(jwt.SigningMethodHS512, jwt.StandardClaims{
-		Audience: string(user.ID),
-		Subject:  user.UID,
-		Id:       uuid.New().String(),
-	})
-	access, err := token.SignedString([]byte(config.GetConfig().GetString("server.access_token_secret")))
-	if err != nil {
-		return nil, err
+	for {
+		token, err := user.GenerateAccessToken()
+		if err != nil {
+			return nil, err
+		}
+		if err := a.FindByAccessToken(token); err != nil {
+			if gorm.IsRecordNotFoundError(err) {
+				app.AccessToken = token
+				break
+			} else {
+				return nil, err
+			}
+		}
 	}
 
-	hashedToken, err := bcrypt.GenerateFromPassword([]byte(access), bcrypt.DefaultCost)
-	if err != nil {
-		return nil, err
+	// generate guest access token
+	for {
+		token, err := user.GenerateAccessToken()
+		if err != nil {
+			return nil, err
+		}
+		if err := a.FindByGuestAccessToken(token); err != nil {
+			if gorm.IsRecordNotFoundError(err) {
+				app.GuestAccessToken = token
+				break
+			} else {
+				return nil, err
+			}
+		}
 	}
-	app.AccessToken = string(hashedToken)
-
-	token = jwt.NewWithClaims(jwt.SigningMethodHS512, jwt.StandardClaims{
-		Audience: string(user.ID),
-		Subject:  user.UID,
-		Id:       uuid.New().String(),
-	})
-	guest, err := token.SignedString([]byte(config.GetConfig().GetString("server.access_token_secret")))
-	app.GuestAccessToken = guest
 
 	err = app.Create()
 	return app, err

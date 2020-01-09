@@ -232,6 +232,134 @@ func (ac *ApplicationController) Update(c echo.Context) (err error) {
 	)
 }
 
+// RenewToken renewal access token
+func (ac *ApplicationController) RenewToken(c echo.Context) (err error) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+	app := new(models.Application)
+	if err := app.FindByID(uint(id)); err != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+	idToken := mymiddleware.ExtractClaims(c)
+	user := new(models.User)
+	if err := user.FindByUID(idToken.UID); err != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+
+	if app.UserID != user.ID {
+		return c.JSON(
+			http.StatusUnauthorized,
+			newResponse(
+				http.StatusUnauthorized,
+				http.StatusText(http.StatusUnauthorized),
+				nil,
+			),
+		)
+	}
+	a := new(models.Application)
+	// generate access token
+	for {
+		token, err := user.GenerateAccessToken()
+		if err != nil {
+			return c.JSON(
+				http.StatusInternalServerError,
+				newResponse(
+					http.StatusInternalServerError,
+					http.StatusText(http.StatusInternalServerError),
+					nil,
+				),
+			)
+		}
+		if err := a.FindByAccessToken(token); err != nil {
+			if gorm.IsRecordNotFoundError(err) {
+				app.AccessToken = token
+				break
+			} else {
+				return c.JSON(
+					http.StatusInternalServerError,
+					newResponse(
+						http.StatusInternalServerError,
+						http.StatusText(http.StatusInternalServerError),
+						nil,
+					),
+				)
+			}
+		}
+	}
+
+	// generate guest access token
+	for {
+		token, err := user.GenerateAccessToken()
+		if err != nil {
+			return c.JSON(
+				http.StatusInternalServerError,
+				newResponse(
+					http.StatusInternalServerError,
+					http.StatusText(http.StatusInternalServerError),
+					nil,
+				),
+			)
+		}
+		if err := a.FindByGuestAccessToken(token); err != nil {
+			if gorm.IsRecordNotFoundError(err) {
+				app.GuestAccessToken = token
+				break
+			} else {
+				return c.JSON(
+					http.StatusInternalServerError,
+					newResponse(
+						http.StatusInternalServerError,
+						http.StatusText(http.StatusInternalServerError),
+						nil,
+					),
+				)
+			}
+		}
+	}
+
+	if err := app.Update(); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			newResponse(
+				http.StatusInternalServerError,
+				http.StatusText(http.StatusInternalServerError),
+				nil,
+			),
+		)
+	}
+	return c.JSON(
+		http.StatusOK,
+		newResponse(
+			http.StatusOK,
+			http.StatusText(http.StatusOK),
+			app,
+		),
+	)
+}
+
 // Destroy destroys an application
 func (ac *ApplicationController) Destroy(c echo.Context) (err error) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)

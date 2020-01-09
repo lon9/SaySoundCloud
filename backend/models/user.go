@@ -1,8 +1,12 @@
 package models
 
 import (
+	"github.com/dgrijalva/jwt-go"
+	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
+	"github.com/lon9/soundboard/backend/config"
 	"github.com/lon9/soundboard/backend/database"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // User is struct of user
@@ -48,6 +52,26 @@ func (u *User) Update() (err error) {
 func (u *User) Delete() (err error) {
 	db := database.GetDB()
 	return db.Delete(u).Error
+}
+
+// GenerateAccessToken generates access token from user
+func (u *User) GenerateAccessToken() (token string, err error) {
+	bareToken := jwt.NewWithClaims(jwt.SigningMethodHS512, jwt.StandardClaims{
+		Audience: string(u.ID),
+		Subject:  u.UID,
+		Id:       uuid.New().String(),
+	})
+
+	access, err := bareToken.SignedString([]byte(config.GetConfig().GetString("server.access_token_secret")))
+	if err != nil {
+		return
+	}
+
+	hashed, err := bcrypt.GenerateFromPassword([]byte(access), bcrypt.DefaultCost)
+	if err != nil {
+		return
+	}
+	return string(hashed), nil
 }
 
 // Users is slice of users
