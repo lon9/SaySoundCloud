@@ -9,7 +9,7 @@ import (
 type User struct {
 	gorm.Model
 	UID          string        `json:"uid" gorm:"unique"`
-	Name         string        `json:"name"`
+	Name         string        `json:"name" gorm:"unique"`
 	Applications []Application `json:"applications"`
 	Description  string        `json:"description"`
 }
