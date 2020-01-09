@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo"
 	"github.com/lon9/soundboard/backend/forms"
 	mymiddleware "github.com/lon9/soundboard/backend/middleware"
@@ -49,6 +50,31 @@ func (uc *UserController) Show(c echo.Context) (err error) {
 		newResponse(
 			http.StatusOK,
 			http.StatusText(http.StatusOK),
+			views.NewUserView(user),
+		),
+	)
+}
+
+func (uc *UserController) Create(c echo.Context) (err error) {
+	idToken := mymiddleware.ExtractClaims(c)
+	user := new(models.User)
+	user.UID = idToken.UID
+	user.Name = uuid.New().String()
+	if err = user.Create(); err != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+	return c.JSON(
+		http.StatusCreated,
+		newResponse(
+			http.StatusCreated,
+			http.StatusText(http.StatusCreated),
 			views.NewUserView(user),
 		),
 	)
