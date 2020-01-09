@@ -368,7 +368,7 @@ func (ac *ApplicationController) WS(c echo.Context) (err error) {
 		)
 	}
 
-	// Authorizaion
+	// authorizaion
 	token := c.QueryParam("token")
 	if app.GuestAccessToken != token {
 		return c.JSON(
@@ -387,5 +387,57 @@ func (ac *ApplicationController) WS(c echo.Context) (err error) {
 		conn.Join(string(app.ID))
 		go conn.ReadPump()
 	}
+	return c.NoContent(http.StatusNoContent)
+}
+
+// Cmd is controller for command to play sound
+func (ac *ApplicationController) Cmd(c echo.Context) (err error) {
+	form := new(forms.CmdForm)
+	if err := c.Bind(form); err != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+
+	if err := form.Auth(uint(id)); err != nil {
+		return c.JSON(
+			http.StatusUnauthorized,
+			newResponse(
+				http.StatusUnauthorized,
+				http.StatusText(http.StatusUnauthorized),
+				nil,
+			),
+		)
+	}
+	roomID := strconv.Itoa(int(id))
+	room, ok := wsrooms.RoomManager.Rooms.Load(roomID)
+	if !ok {
+		return c.JSON(
+			http.StatusNotFound,
+			newResponse(
+				http.StatusNotFound,
+				http.StatusText(http.StatusNotFound),
+				nil,
+			),
+		)
+	}
+	msg := wsrooms.ConstructMessage(roomID, "cmd", "", "server", []byte(form.Name))
+	room.(*wsrooms.Room).Emit(nil, msg)
 	return c.NoContent(http.StatusNoContent)
 }

@@ -43,6 +43,7 @@ func NewRouter() (*echo.Echo, error) {
 
 	version.POST("/apps/:id/ws", applicationController.WSAuth)
 	version.GET("/apps/:id/ws", applicationController.WS)
+	version.POST("/apps/:id/cmd", applicationController.Cmd)
 
 	return router, nil
 }

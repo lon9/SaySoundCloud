@@ -55,6 +55,7 @@ func (uc *UserController) Show(c echo.Context) (err error) {
 	)
 }
 
+// Create creates a user
 func (uc *UserController) Create(c echo.Context) (err error) {
 	idToken := mymiddleware.ExtractClaims(c)
 	user := new(models.User)

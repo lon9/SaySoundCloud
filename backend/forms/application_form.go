@@ -47,7 +47,12 @@ func (af *ApplicationForm) Create(idToken *auth.Token) (ret *models.Application,
 	if err != nil {
 		return nil, err
 	}
-	app.AccessToken = access
+
+	hashedToken, err := bcrypt.GenerateFromPassword([]byte(access), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
+	app.AccessToken = string(hashedToken)
 
 	token = jwt.NewWithClaims(jwt.SigningMethodHS512, jwt.StandardClaims{
 		Audience: string(user.ID),
@@ -94,7 +99,7 @@ func (af *ApplicationForm) Update(id uint, idToken *auth.Token) (ret *models.App
 
 // WSAuthForm is form for authentication of websocket
 type WSAuthForm struct {
-	Password string
+	Password string `json:"password"`
 }
 
 // Auth authenticate websocket connection
@@ -107,4 +112,19 @@ func (wsf *WSAuthForm) Auth(id uint) (token string, err error) {
 		return
 	}
 	return app.GuestAccessToken, nil
+}
+
+// CmdForm is form for sound command
+type CmdForm struct {
+	Name        string `json:"name"`
+	AccessToken string `json:"accessToken"`
+}
+
+// Auth authenticate cmd request
+func (cf *CmdForm) Auth(id uint) (err error) {
+	app := new(models.Application)
+	if err = app.FindByID(uint(id)); err != nil {
+		return
+	}
+	return bcrypt.CompareHashAndPassword([]byte(app.AccessToken), []byte(cf.AccessToken))
 }
