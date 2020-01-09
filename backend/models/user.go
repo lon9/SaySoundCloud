@@ -8,8 +8,8 @@ import (
 // User is struct of user
 type User struct {
 	gorm.Model
-	UID          string        `json:"uid" gorm:"unique"`
-	Name         string        `json:"name" gorm:"unique"`
+	UID          string        `json:"uid" gorm:"unique;not null"`
+	Name         string        `json:"name" gorm:"unique;not null"`
 	Applications []Application `json:"applications"`
 	Description  string        `json:"description"`
 }

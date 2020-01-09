@@ -10,7 +10,7 @@ import (
 // Application is struct of application
 type Application struct {
 	gorm.Model
-	Name             string `json:"name" gorm:"unique"`
+	Name             string `json:"name" gorm:"unique;not null"`
 	Password         string `json:"-"`
 	IsPassword       bool   `json:"isPassword"`
 	User             *User  `json:"user"`
