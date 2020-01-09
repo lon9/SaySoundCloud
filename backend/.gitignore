@@ -20,4 +20,4 @@ backend
 .env
 firebase.json
 gettoken
-database/dev.db
+*.db
