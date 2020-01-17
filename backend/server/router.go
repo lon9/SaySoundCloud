@@ -1,6 +1,8 @@
 package server
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/lon9/soundboard/backend/config"
@@ -14,6 +16,10 @@ func NewRouter() (*echo.Echo, error) {
 	router := echo.New()
 	router.Use(middleware.Logger())
 	router.Use(middleware.Recover())
+	router.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: c.GetStringSlice("server.cors"),
+		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
+	}))
 	authMiddleware, err := mymiddleware.NewFireBaseAuthMiddleware(c.GetString("server.firebase_config"), nil)
 	if err != nil {
 		return nil, err
@@ -28,6 +34,7 @@ func NewRouter() (*echo.Echo, error) {
 
 	userController := controllers.NewUserController()
 
+	version.GET("/users/me", userController.Me, authMiddleware.Verify)
 	version.GET("/users/:id", userController.Show)
 	version.POST("/users", userController.Create, authMiddleware.Verify)
 	version.PUT("/users/:id", userController.Update, authMiddleware.Verify)

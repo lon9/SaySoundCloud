@@ -29,7 +29,14 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/firebase'],
+  plugins: [
+    '~/plugins/firebase',
+    '~/plugins/axios',
+    { src: '~/plugins/nuxt-client-init.js', ssr: false }
+  ],
+  axios: {
+    baseURL: process.env.BASE_URL
+  },
   /*
    ** Nuxt.js dev-modules
    */
@@ -45,7 +52,26 @@ export default {
     '@nuxtjs/bulma',
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    '@nuxtjs/axios',
+    [
+      'nuxt-i18n',
+      {
+        locales: [
+          {
+            code: 'en',
+            file: 'en-US.js'
+          },
+          {
+            code: 'ja',
+            file: 'ja-JP.js'
+          }
+        ],
+        defaultLocale: 'en',
+        langDir: 'lang/',
+        lazy: true
+      }
+    ]
   ],
   /*
    ** Build configuration

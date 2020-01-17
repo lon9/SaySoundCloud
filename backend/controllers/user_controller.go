@@ -20,6 +20,30 @@ func NewUserController() *UserController {
 	return new(UserController)
 }
 
+// Me returns a user logged in
+func (uc *UserController) Me(c echo.Context) (err error) {
+	idToken := mymiddleware.ExtractClaims(c)
+	user := new(models.User)
+	if err = user.FindByUID(idToken.UID); err != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+	return c.JSON(
+		http.StatusOK,
+		newResponse(
+			http.StatusOK,
+			http.StatusText(http.StatusOK),
+			user,
+		),
+	)
+}
+
 // Show returns a user
 func (uc *UserController) Show(c echo.Context) (err error) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
