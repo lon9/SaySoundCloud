@@ -10,21 +10,23 @@
         <div v-if="user" class="navbar-item">
           {{ user.name }}
         </div>
-        <div v-if="user" class="buttons">
-          <nuxt-link to="/apps/create" class="button">
-            Create app
-          </nuxt-link>
-          <nuxt-link to="/users/edit" class="button">
-            {{ $t('editProfile') }}
-          </nuxt-link>
-          <div @click="signOut" class="button">
-            {{ $t('signOut') }}
+        <div class="navbar-item">
+          <div v-if="user" class="buttons">
+            <nuxt-link to="/apps/create" class="button">
+              Create app
+            </nuxt-link>
+            <nuxt-link to="/users/edit" class="button">
+              {{ $t('editProfile') }}
+            </nuxt-link>
+            <div @click="signOut" class="button">
+              {{ $t('signOut') }}
+            </div>
           </div>
-        </div>
-        <div v-else>
-          <nuxt-link to="/signin" class="button is-primary">
-            <strong>{{ $t('signIn') }}</strong>
-          </nuxt-link>
+          <div v-else>
+            <nuxt-link to="/signin" class="button is-primary">
+              <strong>{{ $t('signIn') }}</strong>
+            </nuxt-link>
+          </div>
         </div>
       </div>
     </client-only>
