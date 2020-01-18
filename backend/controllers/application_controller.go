@@ -27,6 +27,7 @@ func (ac *ApplicationController) Index(c echo.Context) (err error) {
 
 	offset, limit, err := parseLimitOffset(c)
 	if err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -41,6 +42,7 @@ func (ac *ApplicationController) Index(c echo.Context) (err error) {
 	if query != "" {
 		// Seach applications
 		if err := apps.SearchByName(query, offset, limit); err != nil {
+			c.Logger().Error(err)
 			if gorm.IsRecordNotFoundError(err) {
 				return c.JSON(
 					http.StatusNotFound,
@@ -62,6 +64,7 @@ func (ac *ApplicationController) Index(c echo.Context) (err error) {
 		}
 	} else {
 		if err := apps.List(offset, limit); err != nil {
+			c.Logger().Error(err)
 			return c.JSON(
 				http.StatusInternalServerError,
 				newResponse(
@@ -92,6 +95,7 @@ func (ac *ApplicationController) Index(c echo.Context) (err error) {
 func (ac *ApplicationController) Show(c echo.Context) (err error) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -104,6 +108,7 @@ func (ac *ApplicationController) Show(c echo.Context) (err error) {
 
 	app := new(models.Application)
 	if err := app.FindByID(uint(id)); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -116,6 +121,7 @@ func (ac *ApplicationController) Show(c echo.Context) (err error) {
 	idToken := mymiddleware.ExtractClaims(c)
 	user := new(models.User)
 	if user.FindByUID(idToken.UID); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -151,6 +157,7 @@ func (ac *ApplicationController) Show(c echo.Context) (err error) {
 func (ac *ApplicationController) Create(c echo.Context) (err error) {
 	appForm := new(forms.ApplicationForm)
 	if err := c.Bind(appForm); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -164,6 +171,7 @@ func (ac *ApplicationController) Create(c echo.Context) (err error) {
 	idToken := mymiddleware.ExtractClaims(c)
 	app, err := appForm.Create(idToken)
 	if err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusInternalServerError,
 			newResponse(
@@ -188,6 +196,7 @@ func (ac *ApplicationController) Create(c echo.Context) (err error) {
 func (ac *ApplicationController) Update(c echo.Context) (err error) {
 	appForm := new(forms.ApplicationForm)
 	if err = c.Bind(appForm); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -200,6 +209,7 @@ func (ac *ApplicationController) Update(c echo.Context) (err error) {
 	idToken := mymiddleware.ExtractClaims(c)
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -212,6 +222,7 @@ func (ac *ApplicationController) Update(c echo.Context) (err error) {
 
 	app, err := appForm.Update(uint(id), idToken)
 	if err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusInternalServerError,
 			newResponse(
@@ -236,6 +247,7 @@ func (ac *ApplicationController) Update(c echo.Context) (err error) {
 func (ac *ApplicationController) RenewToken(c echo.Context) (err error) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -247,6 +259,7 @@ func (ac *ApplicationController) RenewToken(c echo.Context) (err error) {
 	}
 	app := new(models.Application)
 	if err := app.FindByID(uint(id)); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -259,6 +272,7 @@ func (ac *ApplicationController) RenewToken(c echo.Context) (err error) {
 	idToken := mymiddleware.ExtractClaims(c)
 	user := new(models.User)
 	if err := user.FindByUID(idToken.UID); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -284,6 +298,7 @@ func (ac *ApplicationController) RenewToken(c echo.Context) (err error) {
 	for {
 		token, err := user.GenerateAccessToken()
 		if err != nil {
+			c.Logger().Error(err)
 			return c.JSON(
 				http.StatusInternalServerError,
 				newResponse(
@@ -294,6 +309,7 @@ func (ac *ApplicationController) RenewToken(c echo.Context) (err error) {
 			)
 		}
 		if err := a.FindByAccessToken(token); err != nil {
+			c.Logger().Error(err)
 			if gorm.IsRecordNotFoundError(err) {
 				app.AccessToken = token
 				break
@@ -314,6 +330,7 @@ func (ac *ApplicationController) RenewToken(c echo.Context) (err error) {
 	for {
 		token, err := user.GenerateAccessToken()
 		if err != nil {
+			c.Logger().Error(err)
 			return c.JSON(
 				http.StatusInternalServerError,
 				newResponse(
@@ -324,6 +341,7 @@ func (ac *ApplicationController) RenewToken(c echo.Context) (err error) {
 			)
 		}
 		if err := a.FindByGuestAccessToken(token); err != nil {
+			c.Logger().Error(err)
 			if gorm.IsRecordNotFoundError(err) {
 				app.GuestAccessToken = token
 				break
@@ -341,6 +359,7 @@ func (ac *ApplicationController) RenewToken(c echo.Context) (err error) {
 	}
 
 	if err := app.Update(); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusInternalServerError,
 			newResponse(
@@ -364,6 +383,7 @@ func (ac *ApplicationController) RenewToken(c echo.Context) (err error) {
 func (ac *ApplicationController) Destroy(c echo.Context) (err error) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -376,6 +396,7 @@ func (ac *ApplicationController) Destroy(c echo.Context) (err error) {
 
 	app := new(models.Application)
 	if err := app.FindByID(uint(id)); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -389,6 +410,7 @@ func (ac *ApplicationController) Destroy(c echo.Context) (err error) {
 	idToken := mymiddleware.ExtractClaims(c)
 	user := new(models.User)
 	if err := user.FindByUID(idToken.UID); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -429,6 +451,7 @@ func (ac *ApplicationController) Destroy(c echo.Context) (err error) {
 func (ac *ApplicationController) WSAuth(c echo.Context) (err error) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -440,6 +463,7 @@ func (ac *ApplicationController) WSAuth(c echo.Context) (err error) {
 	}
 	form := new(forms.WSAuthForm)
 	if err := c.Bind(form); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -451,6 +475,7 @@ func (ac *ApplicationController) WSAuth(c echo.Context) (err error) {
 	}
 	token, err := form.Auth(uint(id))
 	if err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -474,6 +499,7 @@ func (ac *ApplicationController) WSAuth(c echo.Context) (err error) {
 func (ac *ApplicationController) WS(c echo.Context) (err error) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -486,6 +512,7 @@ func (ac *ApplicationController) WS(c echo.Context) (err error) {
 
 	app := new(models.Application)
 	if err := app.FindByID(uint(id)); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -522,6 +549,7 @@ func (ac *ApplicationController) WS(c echo.Context) (err error) {
 func (ac *ApplicationController) Cmd(c echo.Context) (err error) {
 	form := new(forms.CmdForm)
 	if err := c.Bind(form); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -533,6 +561,7 @@ func (ac *ApplicationController) Cmd(c echo.Context) (err error) {
 	}
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -544,6 +573,7 @@ func (ac *ApplicationController) Cmd(c echo.Context) (err error) {
 	}
 
 	if err := form.Auth(uint(id)); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusUnauthorized,
 			newResponse(

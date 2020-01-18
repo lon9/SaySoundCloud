@@ -20,9 +20,11 @@ func NewApplicationView(app *models.Application) *ApplicationView {
 	view := &ApplicationView{
 		Name:        app.Name,
 		IsPassword:  app.IsPassword,
-		User:        NewUserView(app.User),
 		UserID:      app.UserID,
 		Description: app.Description,
+	}
+	if app.User != nil {
+		view.User = NewUserView(app.User)
 	}
 	view.Model = app.Model
 	return view
@@ -44,10 +46,12 @@ func NewOwnerApplicationView(app *models.Application) *OwnerApplicationView {
 	view := &OwnerApplicationView{
 		Name:        app.Name,
 		IsPassword:  app.IsPassword,
-		User:        NewUserView(app.User),
 		UserID:      app.UserID,
 		Description: app.Description,
 		AccessToken: app.AccessToken,
+	}
+	if app.User != nil {
+		view.User = NewUserView(app.User)
 	}
 	view.Model = app.Model
 	return view

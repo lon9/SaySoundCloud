@@ -11,6 +11,9 @@
           {{ user.name }}
         </div>
         <div v-if="user" class="buttons">
+          <nuxt-link to="/apps/create" class="button">
+            Create app
+          </nuxt-link>
           <nuxt-link to="/users/edit" class="button">
             {{ $t('editProfile') }}
           </nuxt-link>

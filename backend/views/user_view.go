@@ -20,10 +20,12 @@ func NewUserView(user *models.User) *UserView {
 	for i, app := range user.Applications {
 		appViews[i] = NewApplicationView(&app)
 	}
-	return &UserView{
+	view := &UserView{
 		UID:          user.UID,
 		Name:         user.Name,
 		Applications: appViews,
 		Description:  user.Description,
 	}
+	view.Model = user.Model
+	return view
 }

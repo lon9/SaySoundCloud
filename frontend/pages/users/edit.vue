@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <ErrorView :message="errorMsg" />
     <UserForm :profile="profile" :on-submit="onUserSubmit" />
     <div class="container">
       App place holder
@@ -8,14 +9,16 @@
 </template>
 <script>
 import UserForm from '~/components/UserForm'
+import ErrorView from '~/components/ErrorView'
 export default {
-  components: { UserForm },
+  components: { UserForm, ErrorView },
   data() {
     return {
       profile: {
         name: '',
         description: ''
-      }
+      },
+      errorMsg: ''
     }
   },
   mounted() {
@@ -25,8 +28,14 @@ export default {
     }
   },
   methods: {
-    onUserSubmit() {
-      this.$store.dispatch('updateUser', this.profile)
+    async onUserSubmit() {
+      this.errMsg = ''
+      const user = await this.$store.dispatch('updateUser', this.profile)
+      if (user) {
+        this.$router.push({ path: `/users/${this.$store.state.user.ID}` })
+      } else {
+        this.errorMsg = 'Failed to edit'
+      }
     }
   }
 }

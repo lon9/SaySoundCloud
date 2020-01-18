@@ -3,22 +3,28 @@
     <div class="field">
       <div class="label">Name</div>
       <div class="control">
-        <input
-          v-model="profile.name"
-          class="input"
-          type="text"
-          name="username"
-        />
+        <input v-model="app.name" class="input" type="text" name="appname" />
       </div>
     </div>
     <div class="field">
       <label class="label">Description</label>
       <div class="control">
         <textarea
-          v-model="profile.description"
+          v-model="app.description"
           class="textarea"
-          name="userdescription"
+          name="appdescription"
         ></textarea>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Password</label>
+      <div class="control">
+        <input
+          v-model="app.password"
+          class="input"
+          type="password"
+          name="apppassword"
+        />
       </div>
     </div>
     <div class="field is-grouped">
@@ -31,7 +37,7 @@
 <script>
 export default {
   props: {
-    profile: {
+    app: {
       type: Object,
       required: true
     },

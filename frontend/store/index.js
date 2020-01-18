@@ -1,6 +1,7 @@
 export const state = () => ({
   token: '',
-  user: null
+  user: null,
+  apps: []
 })
 
 export const mutations = {
@@ -10,6 +11,9 @@ export const mutations = {
   },
   setUser(state, user) {
     state.user = user
+  },
+  unshiftApp(state, app) {
+    state.apps.unshift(app)
   }
 }
 
@@ -29,23 +33,30 @@ export const actions = {
     try {
       const res = await this.$axios.$post('/users')
       commit('setUser', res.result)
-      return true
-    } catch {
-      return false
-    }
+      return res.result
+    } catch {}
   },
   async updateUser({ state, commit }, profile) {
     try {
       const res = await this.$axios.$put(`/users/${state.user.ID}`, profile)
-      if (res.status === 200) commit('setUser', res.result)
+      commit('setUser', res.result)
+      return res.result
     } catch {}
   },
   async getLoginUser({ dispatch, commit }) {
     try {
       const res = await this.$axios.$get(`/users/me`)
-      if (res.status === 200) commit('setUser', res.result)
+      commit('setUser', res.result)
+      return res.result
     } catch {
       dispatch('signOut')
     }
+  },
+  async createApp({ commit }, app) {
+    try {
+      const res = await this.$axios.$post('/apps', app)
+      commit('unshiftApp', res.result)
+      return res.result
+    } catch {}
   }
 }

@@ -25,6 +25,7 @@ func (uc *UserController) Me(c echo.Context) (err error) {
 	idToken := mymiddleware.ExtractClaims(c)
 	user := new(models.User)
 	if err = user.FindByUID(idToken.UID); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -48,6 +49,7 @@ func (uc *UserController) Me(c echo.Context) (err error) {
 func (uc *UserController) Show(c echo.Context) (err error) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -60,6 +62,7 @@ func (uc *UserController) Show(c echo.Context) (err error) {
 
 	user := new(models.User)
 	if err := user.FindByID(uint(id)); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -86,6 +89,7 @@ func (uc *UserController) Create(c echo.Context) (err error) {
 	user.UID = idToken.UID
 	user.Name = uuid.New().String()
 	if err = user.Create(); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -109,6 +113,7 @@ func (uc *UserController) Create(c echo.Context) (err error) {
 func (uc *UserController) Update(c echo.Context) (err error) {
 	userForm := new(forms.UserForm)
 	if err = c.Bind(userForm); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -121,6 +126,7 @@ func (uc *UserController) Update(c echo.Context) (err error) {
 
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -134,6 +140,7 @@ func (uc *UserController) Update(c echo.Context) (err error) {
 	idToken := mymiddleware.ExtractClaims(c)
 	user, err := userForm.Update(uint(id), idToken)
 	if err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusInternalServerError,
 			newResponse(
@@ -158,6 +165,7 @@ func (uc *UserController) Destroy(c echo.Context) (err error) {
 
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -170,6 +178,7 @@ func (uc *UserController) Destroy(c echo.Context) (err error) {
 
 	user := new(models.User)
 	if err := user.FindByID(uint(id)); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -183,6 +192,7 @@ func (uc *UserController) Destroy(c echo.Context) (err error) {
 	idToken := mymiddleware.ExtractClaims(c)
 	// authorization
 	if idToken.UID != user.UID {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(
@@ -194,6 +204,7 @@ func (uc *UserController) Destroy(c echo.Context) (err error) {
 	}
 
 	if err := user.Delete(); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusInternalServerError,
 			newResponse(
