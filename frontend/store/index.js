@@ -12,8 +12,8 @@ export const mutations = {
   setUser(state, user) {
     state.user = user
   },
-  unshiftApp(state, app) {
-    state.apps.unshift(app)
+  setApps(state, apps) {
+    state.apps = apps
   }
 }
 
@@ -55,7 +55,19 @@ export const actions = {
   async createApp({ commit }, app) {
     try {
       const res = await this.$axios.$post('/apps', app)
-      commit('unshiftApp', res.result)
+      return res.result
+    } catch {}
+  },
+  async getApps({ commit }, { offset, limit, query }) {
+    try {
+      const res = await this.$axios.$get('/apps', {
+        params: {
+          offset,
+          limit,
+          q: query
+        }
+      })
+      commit('setApps', res.result)
       return res.result
     } catch {}
   }

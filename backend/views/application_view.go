@@ -9,7 +9,7 @@ import (
 type ApplicationView struct {
 	gorm.Model
 	Name        string    `json:"name"`
-	IsPassword  bool      `json:"password"`
+	IsPassword  bool      `json:"isPassword"`
 	User        *UserView `json:"user"`
 	UserID      uint      `json:"userId"`
 	Description string    `json:"description"`

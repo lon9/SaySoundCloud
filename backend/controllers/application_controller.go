@@ -118,9 +118,21 @@ func (ac *ApplicationController) Show(c echo.Context) (err error) {
 			),
 		)
 	}
-	idToken := mymiddleware.ExtractClaims(c)
-	user := new(models.User)
-	if user.FindByUID(idToken.UID); err != nil {
+
+	return c.JSON(
+		http.StatusOK,
+		newResponse(
+			http.StatusOK,
+			http.StatusText(http.StatusOK),
+			views.NewApplicationView(app),
+		),
+	)
+}
+
+// OwnerShow show a application for owner
+func (ac *ApplicationController) OwnerShow(c echo.Context) (err error) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
 		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusBadRequest,
@@ -132,13 +144,41 @@ func (ac *ApplicationController) Show(c echo.Context) (err error) {
 		)
 	}
 
-	if user.ID == app.UserID {
+	app := new(models.Application)
+	if err := app.FindByID(uint(id)); err != nil {
+		c.Logger().Error(err)
 		return c.JSON(
-			http.StatusOK,
+			http.StatusBadRequest,
 			newResponse(
-				http.StatusOK,
-				http.StatusText(http.StatusOK),
-				views.NewOwnerApplicationView(app),
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+
+	idToken := mymiddleware.ExtractClaims(c)
+	user := new(models.User)
+	if err := user.FindByUID(idToken.UID); err != nil {
+		c.Logger().Error(err)
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+
+	if user.ID != app.UserID {
+		c.Logger().Error(err)
+		return c.JSON(
+			http.StatusBadRequest,
+			newResponse(
+				http.StatusBadRequest,
+				http.StatusText(http.StatusBadRequest),
+				nil,
 			),
 		)
 	}
@@ -148,7 +188,7 @@ func (ac *ApplicationController) Show(c echo.Context) (err error) {
 		newResponse(
 			http.StatusOK,
 			http.StatusText(http.StatusOK),
-			views.NewApplicationView(app),
+			views.NewOwnerApplicationView(app),
 		),
 	)
 }
@@ -525,7 +565,7 @@ func (ac *ApplicationController) WS(c echo.Context) (err error) {
 
 	// authorizaion
 	token := c.QueryParam("token")
-	if app.GuestAccessToken != token {
+	if app.IsPassword && app.GuestAccessToken != token {
 		return c.JSON(
 			http.StatusBadRequest,
 			newResponse(

@@ -44,6 +44,7 @@ func NewRouter() (*echo.Echo, error) {
 
 	version.GET("/apps", applicationController.Index)
 	version.GET("/apps/:id", applicationController.Show)
+	version.GET("/apps/:id/owner", applicationController.OwnerShow, authMiddleware.Verify)
 	version.POST("/apps", applicationController.Create, authMiddleware.Verify)
 	version.PUT("/apps/:id", applicationController.Update, authMiddleware.Verify)
 	version.PUT("/apps/:id/renewtoken", applicationController.RenewToken, authMiddleware.Verify)

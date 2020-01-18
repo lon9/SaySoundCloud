@@ -24,7 +24,7 @@ export default {
       this.errorMsg = ''
       const app = await this.$store.dispatch('createApp', this.app)
       if (app) {
-        this.$router.push({ path: `/apps/${app.ID}` })
+        this.$router.push({ path: `/apps/${app.ID}/edit` })
       } else {
         this.errorMsg = 'Failed to create'
       }
