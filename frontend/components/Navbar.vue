@@ -38,8 +38,9 @@ export default {
     }
   },
   methods: {
-    signOut() {
-      this.$store.dispatch('signOut')
+    async signOut() {
+      await this.$store.dispatch('signOut')
+      this.$router.push({ path: '/' })
     }
   }
 }
