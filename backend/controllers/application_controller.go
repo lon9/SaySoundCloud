@@ -576,10 +576,9 @@ func (ac *ApplicationController) WS(c echo.Context) (err error) {
 		)
 	}
 	conn := wsrooms.NewConnection(c.Response(), c.Request(), nil)
-	defer conn.Leave(string(app.ID))
 	if c != nil {
 		go conn.WritePump()
-		conn.Join(string(app.ID))
+		conn.Join(strconv.Itoa(int(app.ID)))
 		go conn.ReadPump()
 	}
 	return c.NoContent(http.StatusNoContent)
@@ -612,7 +611,7 @@ func (ac *ApplicationController) Cmd(c echo.Context) (err error) {
 		)
 	}
 
-	if err := form.Auth(uint(id)); err != nil {
+	if ok, err := form.Auth(uint(id)); err != nil || !ok {
 		c.Logger().Error(err)
 		return c.JSON(
 			http.StatusUnauthorized,

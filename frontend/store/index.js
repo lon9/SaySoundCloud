@@ -1,7 +1,8 @@
 export const state = () => ({
   token: '',
   user: null,
-  apps: []
+  apps: [],
+  websocketConnection: null
 })
 
 export const mutations = {
@@ -14,6 +15,9 @@ export const mutations = {
   },
   setApps(state, apps) {
     state.apps = apps
+  },
+  setConnection(state, connection) {
+    state.websocketConnection = connection
   }
 }
 
@@ -70,5 +74,18 @@ export const actions = {
       commit('setApps', res.result)
       return res.result
     } catch {}
+  },
+  connectWebsocket({ commit }, { id, accessToken }) {
+    const baseUrl = process.env.BASE_URL.replace(/http/, 'ws')
+    const connection = new WebSocket(
+      `${baseUrl}/apps/${id}/ws?token=${accessToken}`
+    )
+    commit('setConnection', connection)
+  },
+  closeConnection({ state, commit }) {
+    if (state.websocketConnection !== null) {
+      state.websocketConnection.close()
+      commit('setConnection', null)
+    }
   }
 }

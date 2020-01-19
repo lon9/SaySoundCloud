@@ -32,7 +32,8 @@ export default {
   plugins: [
     '~/plugins/firebase',
     '~/plugins/axios',
-    { src: '~/plugins/nuxt-client-init.js', ssr: false }
+    { src: '~/plugins/nuxt-client-init.js', ssr: false },
+    { src: '~/plugins/router-option.js', ssr: false }
   ],
   axios: {
     baseURL: process.env.BASE_URL

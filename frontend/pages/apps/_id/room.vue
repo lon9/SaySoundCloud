@@ -1,6 +1,15 @@
 <template>
   <div class="container">
-    App room
+    <div v-if="cmds.length !== 0" class="list">
+      <a
+        v-for="(cmd, index) in cmds"
+        :key="index"
+        @click="copyToClipboard(cmd)"
+        class="list-item"
+      >
+        {{ cmd.name }} <small>({{ cmd.time }})</small>
+      </a>
+    </div>
     <PasswordModal
       :app="app"
       @onSubmit="onModalSubmit"
@@ -16,7 +25,12 @@ export default {
   data() {
     return {
       accessToken: '',
-      connection: null
+      cmds: []
+    }
+  },
+  computed: {
+    connection() {
+      return this.$store.state.websocketConnection
     }
   },
   async asyncData({ $axios, params }) {
@@ -34,7 +48,7 @@ export default {
   },
   mounted() {
     if (!this.app.isPassword) {
-      this.connectToWebsocket()
+      this.connect()
     }
   },
   methods: {
@@ -45,28 +59,40 @@ export default {
         })
         this.accessToken = res.result
         this.isModalActive = false
-        this.connectToWebsocket()
+        this.connect()
       } catch {}
     },
     onModalClose() {
       this.isModalActive = false
     },
-    connectToWebsocket() {
-      const baseUrl = process.env.BASE_URL.replace(/http/, 'ws')
-      this.connection = new WebSocket(
-        `${baseUrl}/apps/${this.app.ID}/ws?token=${this.accessToken}`
-      )
+    copyToClipboard(cmd) {
+      navigator.clipboard.writeText(cmd.name)
+    },
+    connect() {
+      const that = this
+      this.$store.dispatch('connectWebsocket', {
+        id: this.app.ID,
+        accessToken: this.accessToken
+      })
       this.connection.onopen = function() {
         console.log('open')
-      }
-      this.connection.onmessage = function(e) {
-        console.log(e.data)
       }
       this.connection.onclose = function() {
         console.log('close')
       }
-      this.connection.onerror = function(err) {
-        console.error(err)
+      this.connection.onerror = function(e) {
+        console.error(e)
+      }
+      this.connection.onmessage = function(e) {
+        const data = JSON.parse(e.data.toString())
+        if (data.event === 'cmd') {
+          const cmdName = decodeURIComponent(atob(data.payload))
+          const time = new Date()
+          that.cmds.push({
+            name: cmdName,
+            time: `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`
+          })
+        }
       }
     }
   }

@@ -127,10 +127,10 @@ type CmdForm struct {
 }
 
 // Auth authenticate cmd request
-func (cf *CmdForm) Auth(id uint) (err error) {
+func (cf *CmdForm) Auth(id uint) (ok bool, err error) {
 	app := new(models.Application)
 	if err = app.FindByID(uint(id)); err != nil {
 		return
 	}
-	return bcrypt.CompareHashAndPassword([]byte(app.AccessToken), []byte(cf.AccessToken))
+	return app.AccessToken == cf.AccessToken, nil
 }
