@@ -1,3 +1,4 @@
+environment: "development"
 db:
     provider: "sqlite3"
     url: "database/dev.db"

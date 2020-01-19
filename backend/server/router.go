@@ -25,6 +25,10 @@ func NewRouter() (*echo.Echo, error) {
 		return nil, err
 	}
 
+	if c.GetString("environment") == "development" {
+		router.Static("/sounds", "../sounds")
+	}
+
 	healthController := controllers.NewHealthController()
 
 	router.GET("/health", healthController.Index)

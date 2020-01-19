@@ -2,7 +2,7 @@
   <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <nuxt-link to="/" class="navbar-item">
-        Soundboard
+        {{ appTitle }}
       </nuxt-link>
     </div>
     <client-only>
@@ -34,6 +34,11 @@
 </template>
 <script>
 export default {
+  data() {
+    return {
+      appTitle: process.env.APP_TITLE
+    }
+  },
   computed: {
     user() {
       return this.$store.state.user

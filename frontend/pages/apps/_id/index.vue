@@ -22,7 +22,7 @@
       >
         Edit
       </nuxt-link>
-      <a @click="deleteApp" class="button">
+      <a @click="deleteApp" class="button is-danger">
         Delete
       </a>
     </div>

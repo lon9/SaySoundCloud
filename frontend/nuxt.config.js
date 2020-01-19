@@ -87,7 +87,8 @@ export default {
     APP_ID: process.env.APP_ID,
     BASE_URL: process.env.BASE_URL,
     APP_TITLE: process.env.APP_TITLE,
-    APP_DESCRIPTION: process.env.APP_DESCRIPTION
+    APP_DESCRIPTION: process.env.APP_DESCRIPTION,
+    SOUND_BASE_URL: process.env.SOUND_BASE_URL
   },
   build: {
     babel: {
