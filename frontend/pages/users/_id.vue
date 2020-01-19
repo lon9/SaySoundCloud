@@ -1,20 +1,30 @@
 <template>
   <div class="container">
     <div v-if="user" class="content">
-      <h4>{{ user.name }}</h4>
-      <p style="white-space:pre-line;">
-        {{ user.description }}
-      </p>
+      <p class="title is-4">{{ user.name }}</p>
+      <p class="is-6" style="white-space:pre-line;">{{ user.description }}</p>
+    </div>
+    <p class="is-size-4">Apps</p>
+    <div>
+      <AppView v-for="app in apps" :key="app.ID" :app="app" />
     </div>
   </div>
 </template>
 <script>
+import AppView from '~/components/AppView'
 export default {
+  components: { AppView },
   async asyncData({ $axios, params }) {
     try {
-      const res = await $axios.$get(`/users/${params.id}`)
+      const userRes = await $axios.$get(`/users/${params.id}`)
+      const appsRes = await $axios.$get(`/apps`, {
+        params: {
+          userId: params.id
+        }
+      })
       return {
-        user: res.result
+        user: userRes.result,
+        apps: appsRes.result
       }
     } catch {}
   }

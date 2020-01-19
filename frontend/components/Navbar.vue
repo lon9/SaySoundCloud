@@ -7,9 +7,13 @@
     </div>
     <client-only>
       <div class="navbar-end">
-        <div v-if="user" class="navbar-item has-text-white">
+        <nuxt-link
+          :to="localePath({ name: 'users-id', params: { id: user.ID } })"
+          v-if="user"
+          class="navbar-item has-text-white"
+        >
           {{ user.name }}
-        </div>
+        </nuxt-link>
         <div class="navbar-item">
           <div v-if="user" class="buttons">
             <nuxt-link to="/apps/create" class="button">

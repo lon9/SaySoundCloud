@@ -2,7 +2,13 @@
   <div class="card">
     <div class="card-content">
       <p class="title is-4">{{ app.name }}</p>
-      <p class="subtitle is-6">@{{ app.user.name }}</p>
+      <p class="subtitle is-6">
+        <nuxt-link
+          :to="localePath({ name: 'users-id', params: { id: app.userId } })"
+        >
+          @{{ app.user.name }}
+        </nuxt-link>
+      </p>
     </div>
     <div class="card-footer">
       <nuxt-link
@@ -11,9 +17,12 @@
       >
         Detail
       </nuxt-link>
-      <a @click="$emit('onEnter', app)" class="card-footer-item">
+      <nuxt-link
+        :to="localePath({ name: 'apps-id-room', params: { id: app.ID } })"
+        class="card-footer-item"
+      >
         Enter
-      </a>
+      </nuxt-link>
     </div>
   </div>
 </template>

@@ -16,12 +16,7 @@
       </div>
     </div>
     <div>
-      <AppView
-        v-for="app in apps"
-        :key="app.ID"
-        :app="app"
-        @onEnter="onEnter"
-      />
+      <AppView v-for="app in apps" :key="app.ID" :app="app" />
     </div>
   </div>
 </template>
@@ -49,9 +44,6 @@ export default {
     })
   },
   methods: {
-    onEnter(app) {
-      this.$router.push({ path: `/apps/${app.ID}/room` })
-    },
     searchApps() {
       this.page = 1
       this.$store.dispatch('getApps', {

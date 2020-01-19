@@ -65,6 +65,12 @@ func (as *Applications) List(offset, limit int) (err error) {
 	return db.Order("name asc").Limit(limit).Offset(offset).Find(as).Error
 }
 
+// FindByUserID finds applications by user id
+func (as *Applications) FindByUserID(userID uint, offset, limit int) (err error) {
+	db := database.GetDB()
+	return db.Where("user_id = ?", userID).Order("name asc").Limit(limit).Offset(offset).Find(as).Error
+}
+
 // SearchByName searches applications by name
 func (as *Applications) SearchByName(name string, offset, limit int) (err error) {
 	db := database.GetDB()

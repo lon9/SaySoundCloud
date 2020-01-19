@@ -63,16 +63,31 @@ func (ac *ApplicationController) Index(c echo.Context) (err error) {
 			)
 		}
 	} else {
-		if err := apps.List(offset, limit); err != nil {
-			c.Logger().Error(err)
-			return c.JSON(
-				http.StatusInternalServerError,
-				newResponse(
+		userID, err := strconv.ParseUint(c.QueryParam("userId"), 10, 64)
+		if err != nil {
+			if err := apps.List(offset, limit); err != nil {
+				c.Logger().Error(err)
+				return c.JSON(
 					http.StatusInternalServerError,
-					http.StatusText(http.StatusInternalServerError),
-					nil,
-				),
-			)
+					newResponse(
+						http.StatusInternalServerError,
+						http.StatusText(http.StatusInternalServerError),
+						nil,
+					),
+				)
+			}
+		} else {
+			if err := apps.FindByUserID(uint(userID), offset, limit); err != nil {
+				c.Logger().Error(err)
+				return c.JSON(
+					http.StatusInternalServerError,
+					newResponse(
+						http.StatusInternalServerError,
+						http.StatusText(http.StatusInternalServerError),
+						nil,
+					),
+				)
+			}
 		}
 	}
 
