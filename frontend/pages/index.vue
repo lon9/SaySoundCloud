@@ -1,7 +1,27 @@
 <template>
   <div class="container">
-    <div v-for="app in apps" :key="app.ID">
-      <AppView :app="app" @onEnter="onEnter" />
+    <div class="field has-addons">
+      <div class="control">
+        <input
+          v-model="query"
+          class="input"
+          type="text"
+          placeholder="Find an application"
+        />
+      </div>
+      <div class="control">
+        <a @click="searchApps" class="button is-info">
+          Search
+        </a>
+      </div>
+    </div>
+    <div>
+      <AppView
+        v-for="app in apps"
+        :key="app.ID"
+        :app="app"
+        @onEnter="onEnter"
+      />
     </div>
   </div>
 </template>
@@ -31,6 +51,14 @@ export default {
   methods: {
     onEnter(app) {
       this.$router.push({ path: `/apps/${app.ID}/room` })
+    },
+    searchApps() {
+      this.page = 1
+      this.$store.dispatch('getApps', {
+        offset: (this.page - 1) * LIMIT,
+        limit: LIMIT,
+        query: this.query
+      })
     }
   }
 }

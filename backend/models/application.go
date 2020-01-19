@@ -66,7 +66,7 @@ func (as *Applications) List(offset, limit int) (err error) {
 }
 
 // SearchByName searches applications by name
-func (as *Applications) SearchByName(name string, limit, offset int) (err error) {
+func (as *Applications) SearchByName(name string, offset, limit int) (err error) {
 	db := database.GetDB()
 	query := fmt.Sprintf("%%%s%%", name)
 	return db.Where("name LIKE ?", query).Order("name asc").Limit(limit).Offset(offset).Find(as).Error
