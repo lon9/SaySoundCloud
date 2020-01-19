@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <ErrorView :message="errorMsg" />
     <div v-if="app" class="content">
       <p class="title is-4">{{ app.name }}</p>
       <p class="subtitle is-6">@{{ app.user.name }}</p>
@@ -21,11 +22,21 @@
       >
         Edit
       </nuxt-link>
+      <a @click="deleteApp" class="button">
+        Delete
+      </a>
     </div>
   </div>
 </template>
 <script>
+import ErrorView from '~/components/ErrorView'
 export default {
+  components: { ErrorView },
+  data() {
+    return {
+      errorMsg: ''
+    }
+  },
   computed: {
     user() {
       return this.$store.state.user
@@ -38,6 +49,16 @@ export default {
         app: res.result
       }
     } catch {}
+  },
+  methods: {
+    async deleteApp() {
+      this.errorMsg = ''
+      if (await this.$store.dispatch('deleteApp', this.app.ID)) {
+        this.$router.push({ path: '/' })
+      } else {
+        this.errorMsg = 'Failed to delete'
+      }
+    }
   }
 }
 </script>

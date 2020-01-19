@@ -24,12 +24,10 @@ export default {
       this.errorMsg = ''
       try {
         const res = await this.$axios.$post('/apps', this.app)
-        if (res.status === 201) {
-          this.$router.push({ path: `/apps/${res.result.ID}/edit` })
-        } else {
-          this.errorMsg = 'Failed to create'
-        }
-      } catch {}
+        this.$router.push({ path: `/apps/${res.result.ID}/edit` })
+      } catch {
+        this.errorMsg = 'Failed to create'
+      }
     }
   }
 }

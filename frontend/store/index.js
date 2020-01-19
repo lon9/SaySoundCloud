@@ -69,6 +69,14 @@ export const actions = {
       return res.result
     } catch {}
   },
+  async deleteApp(_, id) {
+    try {
+      await this.$axios.$delete(`/apps/${id}`)
+      return true
+    } catch {
+      return false
+    }
+  },
   connectWebsocket({ commit }, { id, accessToken }) {
     const baseUrl = process.env.BASE_URL.replace(/http/, 'ws')
     const connection = new WebSocket(
