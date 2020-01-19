@@ -22,12 +22,14 @@ export default {
   methods: {
     async onAppSubmit() {
       this.errorMsg = ''
-      const app = await this.$store.dispatch('createApp', this.app)
-      if (app) {
-        this.$router.push({ path: `/apps/${app.ID}/edit` })
-      } else {
-        this.errorMsg = 'Failed to create'
-      }
+      try {
+        const res = await this.$axios.$post('/apps', this.app)
+        if (res.status === 201) {
+          this.$router.push({ path: `/apps/${res.result.ID}/edit` })
+        } else {
+          this.errorMsg = 'Failed to create'
+        }
+      } catch {}
     }
   }
 }

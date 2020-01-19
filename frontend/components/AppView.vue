@@ -1,9 +1,8 @@
 <template>
   <div class="card">
     <div class="card-content">
-      <p>
-        {{ app.name }}
-      </p>
+      <p class="title is-4">{{ app.name }}</p>
+      <p class="subtitle is-6">@{{ app.user.name }}</p>
     </div>
     <div class="card-footer">
       <nuxt-link

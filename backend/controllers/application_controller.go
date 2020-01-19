@@ -23,7 +23,7 @@ func NewApplicationController() *ApplicationController {
 
 // Index index applications
 func (ac *ApplicationController) Index(c echo.Context) (err error) {
-	apps := new(models.Applications)
+	var apps models.Applications
 
 	offset, limit, err := parseLimitOffset(c)
 	if err != nil {
@@ -76,9 +76,24 @@ func (ac *ApplicationController) Index(c echo.Context) (err error) {
 		}
 	}
 
-	ret := make([]*views.ApplicationView, len(*apps))
-	for i, app := range *apps {
-		ret[i] = views.NewApplicationView(&app)
+	for i := range apps {
+		apps[i].User = new(models.User)
+		if err := apps[i].User.FindByID(apps[i].UserID); err != nil {
+			c.Logger().Error(err)
+			return c.JSON(
+				http.StatusInternalServerError,
+				newResponse(
+					http.StatusInternalServerError,
+					http.StatusText(http.StatusInternalServerError),
+					nil,
+				),
+			)
+		}
+	}
+
+	ret := make([]*views.ApplicationView, len(apps))
+	for i := range apps {
+		ret[i] = views.NewApplicationView(&apps[i])
 	}
 
 	return c.JSON(
@@ -114,6 +129,19 @@ func (ac *ApplicationController) Show(c echo.Context) (err error) {
 			newResponse(
 				http.StatusBadRequest,
 				http.StatusText(http.StatusBadRequest),
+				nil,
+			),
+		)
+	}
+
+	app.User = new(models.User)
+	if err := app.User.FindByID(app.UserID); err != nil {
+		c.Logger().Error(err)
+		return c.JSON(
+			http.StatusInternalServerError,
+			newResponse(
+				http.StatusInternalServerError,
+				http.StatusText(http.StatusInternalServerError),
 				nil,
 			),
 		)

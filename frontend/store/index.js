@@ -56,12 +56,6 @@ export const actions = {
       dispatch('signOut')
     }
   },
-  async createApp({ commit }, app) {
-    try {
-      const res = await this.$axios.$post('/apps', app)
-      return res.result
-    } catch {}
-  },
   async getApps({ commit }, { offset, limit, query }) {
     try {
       const res = await this.$axios.$get('/apps', {
