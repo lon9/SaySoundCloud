@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <p>You can copy the command by clicking the link below</p>
-    <SearchBox @search="searchSounds" placeHolder="Find a sound" />
+    <SearchBox @search="searchSounds" place-holder="Find a sound" />
     <div class="panel">
       <a
         v-for="(sound, index) in sounds"
