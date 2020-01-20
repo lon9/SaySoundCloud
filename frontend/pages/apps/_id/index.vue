@@ -22,7 +22,11 @@
       >
         Edit
       </nuxt-link>
-      <a @click="deleteApp" class="button is-danger">
+      <a
+        v-if="user && user.ID == app.userId"
+        @click="deleteApp"
+        class="button is-danger"
+      >
         Delete
       </a>
     </div>
