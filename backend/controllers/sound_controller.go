@@ -1,10 +1,11 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
-	"github.com/lon9/soundboard/backend/models"
-	"net/http"
+	"github.com/lon9/SaySoundCloud/backend/models"
 )
 
 // SoundController is controller for sounds

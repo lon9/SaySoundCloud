@@ -1,6 +1,6 @@
-# soundboard
+# SaySoundCloud
 
-> open source soundboard for saas
+> open source SaySound on cloud
 
 ## Build Setup
 

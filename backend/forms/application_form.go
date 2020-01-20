@@ -5,7 +5,7 @@ import (
 
 	"firebase.google.com/go/auth"
 	"github.com/jinzhu/gorm"
-	"github.com/lon9/soundboard/backend/models"
+	"github.com/lon9/SaySoundCloud/backend/models"
 	"golang.org/x/crypto/bcrypt"
 )
 

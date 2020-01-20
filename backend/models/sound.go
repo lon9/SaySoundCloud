@@ -2,8 +2,9 @@ package models
 
 import (
 	"fmt"
+
 	"github.com/jinzhu/gorm"
-	"github.com/lon9/soundboard/backend/database"
+	"github.com/lon9/SaySoundCloud/backend/database"
 )
 
 // Sound is struct of Sound
@@ -28,6 +29,7 @@ func (ss *Sounds) List(offset, limit int) (err error) {
 	return db.Order("name asc").Limit(limit).Offset(offset).Find(ss).Error
 }
 
+// SearchByName searches a sound by name
 func (ss *Sounds) SearchByName(name string, offset, limit int) (err error) {
 	db := database.GetDB()
 	query := fmt.Sprintf("%%%s%%", name)

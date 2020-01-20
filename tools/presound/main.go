@@ -15,7 +15,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/lon9/soundboard/backend/models"
+	"github.com/lon9/SaySoundCloud/backend/models"
 )
 
 var exts = []string{".mp3", ".wav", ".ogg", ".aac"}

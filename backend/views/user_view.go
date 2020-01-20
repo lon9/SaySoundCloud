@@ -2,7 +2,7 @@ package views
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/lon9/soundboard/backend/models"
+	"github.com/lon9/SaySoundCloud/backend/models"
 )
 
 // UserView is view for user

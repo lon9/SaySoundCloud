@@ -5,9 +5,9 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/lon9/soundboard/backend/config"
-	"github.com/lon9/soundboard/backend/controllers"
-	mymiddleware "github.com/lon9/soundboard/backend/middleware"
+	"github.com/lon9/SaySoundCloud/backend/config"
+	"github.com/lon9/SaySoundCloud/backend/controllers"
+	mymiddleware "github.com/lon9/SaySoundCloud/backend/middleware"
 )
 
 // NewRouter is constructor for router

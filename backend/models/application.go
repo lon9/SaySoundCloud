@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/jinzhu/gorm"
-	"github.com/lon9/soundboard/backend/database"
+	"github.com/lon9/SaySoundCloud/backend/database"
 )
 
 // Application is struct of application

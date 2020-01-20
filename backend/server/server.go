@@ -1,6 +1,6 @@
 package server
 
-import "github.com/lon9/soundboard/backend/config"
+import "github.com/lon9/SaySoundCloud/backend/config"
 
 // Init initialize server
 func Init() error {

@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"firebase.google.com/go/auth"
-	"github.com/lon9/soundboard/backend/models"
+	"github.com/lon9/SaySoundCloud/backend/models"
 )
 
 // UserForm is form for user

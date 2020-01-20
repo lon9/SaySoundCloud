@@ -6,10 +6,10 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo"
-	"github.com/lon9/soundboard/backend/forms"
-	mymiddleware "github.com/lon9/soundboard/backend/middleware"
-	"github.com/lon9/soundboard/backend/models"
-	"github.com/lon9/soundboard/backend/views"
+	"github.com/lon9/SaySoundCloud/backend/forms"
+	mymiddleware "github.com/lon9/SaySoundCloud/backend/middleware"
+	"github.com/lon9/SaySoundCloud/backend/models"
+	"github.com/lon9/SaySoundCloud/backend/views"
 )
 
 // UserController is controller for users

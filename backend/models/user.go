@@ -4,8 +4,8 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
-	"github.com/lon9/soundboard/backend/config"
-	"github.com/lon9/soundboard/backend/database"
+	"github.com/lon9/SaySoundCloud/backend/config"
+	"github.com/lon9/SaySoundCloud/backend/database"
 	"golang.org/x/crypto/bcrypt"
 )
 

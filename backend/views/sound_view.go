@@ -1,7 +1,7 @@
 package views
 
 import (
-	"github.com/lon9/soundboard/backend/models"
+	"github.com/lon9/SaySoundCloud/backend/models"
 )
 
 // SoundView is view for a sound

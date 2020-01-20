@@ -5,11 +5,11 @@ import (
 	"os"
 	"testing"
 
-	"github.com/lon9/soundboard/backend/models"
+	"github.com/lon9/SaySoundCloud/backend/models"
 
 	"github.com/go-testfixtures/testfixtures/v3"
-	"github.com/lon9/soundboard/backend/config"
-	"github.com/lon9/soundboard/backend/database"
+	"github.com/lon9/SaySoundCloud/backend/config"
+	"github.com/lon9/SaySoundCloud/backend/database"
 )
 
 var fixtures *testfixtures.Loader

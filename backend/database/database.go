@@ -2,7 +2,7 @@ package database
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/lon9/soundboard/backend/config"
+	"github.com/lon9/SaySoundCloud/backend/config"
 )
 
 var d *gorm.DB

@@ -9,7 +9,7 @@ import (
 	"cloud.google.com/go/storage"
 	firebase "firebase.google.com/go"
 	"github.com/jinzhu/gorm"
-	"github.com/lon9/soundboard/backend/models"
+	"github.com/lon9/SaySoundCloud/backend/models"
 	"google.golang.org/api/option"
 )
 

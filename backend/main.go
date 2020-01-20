@@ -6,10 +6,10 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/lon9/soundboard/backend/config"
-	"github.com/lon9/soundboard/backend/database"
-	"github.com/lon9/soundboard/backend/models"
-	"github.com/lon9/soundboard/backend/server"
+	"github.com/lon9/SaySoundCloud/backend/config"
+	"github.com/lon9/SaySoundCloud/backend/database"
+	"github.com/lon9/SaySoundCloud/backend/models"
+	"github.com/lon9/SaySoundCloud/backend/server"
 )
 
 func main() {

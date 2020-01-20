@@ -1,7 +1,7 @@
 {
-  "name": "soundboard",
+  "name": "saysoundcloud",
   "version": "1.0.0",
-  "description": "open source soundboard for saas",
+  "description": "open source SaySound on cloud",
   "author": "lon9",
   "private": true,
   "scripts": {
