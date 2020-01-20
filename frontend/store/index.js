@@ -2,6 +2,7 @@ export const state = () => ({
   token: '',
   user: null,
   apps: [],
+  sounds: [],
   websocketConnection: null
 })
 
@@ -15,6 +16,9 @@ export const mutations = {
   },
   setApps(state, apps) {
     state.apps = apps
+  },
+  setSounds(state, sounds) {
+    state.sounds = sounds
   },
   setConnection(state, connection) {
     state.websocketConnection = connection
@@ -66,6 +70,19 @@ export const actions = {
         }
       })
       commit('setApps', res.result)
+      return res.result
+    } catch {}
+  },
+  async getSounds({ commit }, { offset, limit, query }) {
+    try {
+      const res = await this.$axios.$get('/sounds', {
+        params: {
+          offset,
+          limit,
+          q: query
+        }
+      })
+      commit('setSounds', res.result)
       return res.result
     } catch {}
   },

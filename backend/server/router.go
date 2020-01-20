@@ -58,5 +58,9 @@ func NewRouter() (*echo.Echo, error) {
 	version.GET("/apps/:id/ws", applicationController.WS)
 	version.POST("/apps/:id/cmd", applicationController.Cmd)
 
+	soundController := controllers.NewSoundController()
+
+	version.GET("/sounds", soundController.Index)
+
 	return router, nil
 }

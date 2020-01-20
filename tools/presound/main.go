@@ -86,9 +86,10 @@ func main() {
 	}
 
 	// resolve command name
+	var dupIdx int
 	for k, v := range sounds {
 		if len(v) > 1 {
-			for i, cmd := range v[1:] {
+			for _, cmd := range v[1:] {
 				var newName string
 				lastWord := cmd.CmdName[len(cmd.CmdName)-1]
 				index, err := strconv.Atoi(string(lastWord))
@@ -112,13 +113,15 @@ func main() {
 						break
 					}
 				}
+				prevPath := cmd.Path
 				cmd.FileName = newName + cmd.Ext
 				cmd.CmdName = newName
 				cmd.Path = filepath.Join(filepath.Dir(cmd.Path), cmd.FileName)
 				newSounds[cmd.CmdName] = []localSound{cmd}
-				log.Printf("%s->%s", v[i].CmdName, cmd.CmdName)
+				log.Printf("%d: %s->%s", dupIdx+1, prevPath, cmd.Path)
+				dupIdx++
 				if !dryRun {
-					if err := os.Rename(v[i].Path, cmd.Path); err != nil {
+					if err := os.Rename(prevPath, cmd.Path); err != nil {
 						panic(err)
 					}
 				}
@@ -155,11 +158,11 @@ func main() {
 		dir := hashed[:2]
 		dirPath := filepath.Join(outputDir, dir)
 		dst := filepath.Join(dirPath, v[0].FileName)
-		if err := os.MkdirAll(dirPath, 0755); err != nil {
-			panic(err)
-		}
 		log.Printf("%s->%s", src, dst)
 		if !dryRun {
+			if err := os.MkdirAll(dirPath, 0755); err != nil {
+				panic(err)
+			}
 			if err := os.Rename(src, dst); err != nil {
 				panic(err)
 			}

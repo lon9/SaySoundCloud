@@ -5,35 +5,51 @@
         {{ appTitle }}
       </nuxt-link>
     </div>
-    <client-only>
-      <div class="navbar-end">
-        <nuxt-link
-          :to="localePath({ name: 'users-id', params: { id: user.ID } })"
-          v-if="user"
-          class="navbar-item has-text-white"
-        >
-          {{ user.name }}
-        </nuxt-link>
-        <div class="navbar-item">
-          <div v-if="user" class="buttons">
-            <nuxt-link to="/apps/create" class="button">
-              Create app
-            </nuxt-link>
-            <nuxt-link to="/users/edit" class="button">
-              {{ $t('editProfile') }}
-            </nuxt-link>
-            <div @click="signOut" class="button">
-              {{ $t('signOut') }}
+    <div class="navbar-menu is-active">
+      <div class="navbar-start">
+        <a href="/sounds" target="_blank" class="navbar-item">
+          Command list
+        </a>
+      </div>
+      <client-only>
+        <div class="navbar-end">
+          <nuxt-link
+            :to="localePath({ name: 'users-id', params: { id: user.ID } })"
+            v-if="user"
+            class="navbar-item has-text-white"
+          >
+            {{ user.name }}
+          </nuxt-link>
+          <div class="navbar-item">
+            <div v-if="user" class="buttons">
+              <nuxt-link
+                :to="localePath({ name: 'apps-create' })"
+                class="button"
+              >
+                Create app
+              </nuxt-link>
+              <nuxt-link
+                :to="localePath({ name: 'users-edit' })"
+                class="button"
+              >
+                {{ $t('editProfile') }}
+              </nuxt-link>
+              <div @click="signOut" class="button">
+                {{ $t('signOut') }}
+              </div>
+            </div>
+            <div v-else>
+              <nuxt-link
+                :to="localePath({ name: 'signin' })"
+                class="button is-primary"
+              >
+                <strong>{{ $t('signIn') }}</strong>
+              </nuxt-link>
             </div>
           </div>
-          <div v-else>
-            <nuxt-link to="/signin" class="button is-primary">
-              <strong>{{ $t('signIn') }}</strong>
-            </nuxt-link>
-          </div>
         </div>
-      </div>
-    </client-only>
+      </client-only>
+    </div>
   </nav>
 </template>
 <script>
@@ -56,3 +72,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+nav {
+  margin-bottom: 1rem;
+}
+</style>

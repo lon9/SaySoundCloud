@@ -8,12 +8,12 @@
       </p>
     </div>
     You can copy the command by clicking the command name.
-    <div v-if="cmds.length !== 0" class="list">
+    <div v-if="cmds.length !== 0" class="panel">
       <a
         v-for="(cmd, index) in cmds"
         :key="index"
         @click="copyToClipboard(cmd)"
-        class="list-item"
+        class="panel-block"
       >
         {{ cmd.name }} <small>({{ cmd.time }})</small>
       </a>

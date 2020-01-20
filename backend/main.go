@@ -18,7 +18,7 @@ func main() {
 	flag.Parse()
 
 	config.Init(*env)
-	database.Init(false, &models.User{}, &models.Application{})
+	database.Init(false, &models.User{}, &models.Application{}, &models.Sounds{})
 	defer database.Close()
 	if err := server.Init(); err != nil {
 		panic(err)

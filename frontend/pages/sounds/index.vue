@@ -1,19 +1,26 @@
 <template>
   <div class="container">
-    <SearchBox @search="searchApps" placeholder="Find an application" />
-    <div>
-      <AppView v-for="app in apps" :key="app.ID" :app="app" />
+    <p>You can copy the command by clicking the link below</p>
+    <SearchBox @search="searchSounds" placeHolder="Find a sound" />
+    <div class="panel">
+      <a
+        v-for="(sound, index) in sounds"
+        :key="index"
+        @click="copyToClipboard(sound)"
+        class="panel-block"
+      >
+        {{ sound.name }}
+      </a>
     </div>
-    <Pagination @next="next" @prev="prev" :page="page" />
+    <Pagination @prev="prev" @next="next" :page="page" />
   </div>
 </template>
 <script>
-import AppView from '~/components/AppView'
 import Pagination from '~/components/Pagination'
 import SearchBox from '~/components/SearchBox'
-const LIMIT = 50
+const LIMIT = 100
 export default {
-  components: { AppView, Pagination, SearchBox },
+  components: { Pagination, SearchBox },
   data() {
     return {
       page: 1,
@@ -21,30 +28,33 @@ export default {
     }
   },
   computed: {
-    apps() {
-      return this.$store.state.apps
+    sounds() {
+      return this.$store.state.sounds
     }
   },
   async fetch({ store, params }) {
-    await store.dispatch('getApps', {
+    await store.dispatch('getSounds', {
       offset: 0,
       limit: LIMIT,
       query: ''
     })
   },
   methods: {
-    searchApps(query) {
-      this.page = 1
+    searchSounds(query) {
       this.query = query
-      this.$store.dispatch('getApps', {
+      this.page = 1
+      this.$store.dispatch('getSounds', {
         offset: (this.page - 1) * LIMIT,
         limit: LIMIT,
         query: this.query
       })
     },
+    copyToClipboard(sound) {
+      navigator.clipboard.writeText(sound.name)
+    },
     next() {
       this.page++
-      this.$store.dispatch('getApps', {
+      this.$store.dispatch('getSounds', {
         offset: (this.page - 1) * LIMIT,
         limit: LIMIT,
         query: this.query
@@ -52,7 +62,7 @@ export default {
     },
     prev() {
       this.page--
-      this.$store.dispatch('getApps', {
+      this.$store.dispatch('getSounds', {
         offset: (this.page - 1) * LIMIT,
         limit: LIMIT,
         query: this.query

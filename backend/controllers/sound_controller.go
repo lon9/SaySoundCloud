@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/lon9/SaySoundCloud/backend/views"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 	"github.com/lon9/SaySoundCloud/backend/models"
@@ -68,4 +69,18 @@ func (sc *SoundController) Index(c echo.Context) (err error) {
 			)
 		}
 	}
+
+	ret := make([]*views.SoundView, len(sounds))
+	for i := range sounds {
+		ret[i] = views.NewSoundView(&sounds[i])
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		newResponse(
+			http.StatusOK,
+			http.StatusText(http.StatusOK),
+			ret,
+		),
+	)
 }
