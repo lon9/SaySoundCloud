@@ -7,8 +7,8 @@ import (
 // Sound is struct of Sound
 type Sound struct {
 	gorm.Model
-	CmdName  string `json:"cmdName" gorm:"unique;not null"`
-	FileName string `json:"fileName" gorm:"unique;not null"`
+	Name string `json:"name" gorm:"unique;not null;index"`
+	Path string `json:"path" gorm:"unique;not null"`
 }
 
 // Sounds is slice of sounds
