@@ -17,7 +17,7 @@ type Sound struct {
 // FindByName finds a sound by name
 func (s *Sound) FindByName(name string) (err error) {
 	db := database.GetDB()
-	return db.Where("name = ?").First(s).Error
+	return db.Where("name = ?", name).First(s).Error
 }
 
 // Sounds is slice of sounds

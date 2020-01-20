@@ -101,10 +101,10 @@ export default {
       this.connection.onmessage = async function(e) {
         const data = JSON.parse(e.data.toString())
         if (data.event === 'cmd') {
-          const cmdName = decodeURIComponent(atob(data.payload))
+          const sound = JSON.parse(decodeURIComponent(atob(data.payload)))
           try {
             const source = await that.$axios.$get(
-              `${process.env.SOUND_BASE_URL}/${cmdName}.wav`,
+              `${process.env.SOUND_BASE_URL}/${sound.path}`,
               {
                 responseType: 'arraybuffer'
               }
@@ -116,7 +116,7 @@ export default {
               source.start(0)
               const time = new Date()
               that.cmds.unshift({
-                name: cmdName,
+                name: sound.name,
                 time: `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`
               })
             })

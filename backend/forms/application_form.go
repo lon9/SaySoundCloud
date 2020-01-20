@@ -134,3 +134,12 @@ func (cf *CmdForm) Auth(id uint) (ok bool, err error) {
 	}
 	return app.AccessToken == cf.AccessToken, nil
 }
+
+// GetSound returns a sound
+func (cf *CmdForm) GetSound() (sound *models.Sound, err error) {
+	sound = new(models.Sound)
+	if err = sound.FindByName(cf.Name); err != nil {
+		return
+	}
+	return
+}

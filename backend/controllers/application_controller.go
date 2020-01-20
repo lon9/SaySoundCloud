@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"net/http"
 	"strconv"
 
@@ -641,6 +642,20 @@ func (ac *ApplicationController) Cmd(c echo.Context) (err error) {
 			),
 		)
 	}
+
+	sound, err := form.GetSound()
+	if err != nil {
+		c.Logger().Error(err)
+		return c.JSON(
+			http.StatusNotFound,
+			newResponse(
+				http.StatusNotFound,
+				http.StatusText(http.StatusNotFound),
+				nil,
+			),
+		)
+	}
+
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
 		c.Logger().Error(err)
@@ -665,6 +680,7 @@ func (ac *ApplicationController) Cmd(c echo.Context) (err error) {
 			),
 		)
 	}
+
 	roomID := strconv.Itoa(int(id))
 	room, ok := wsrooms.RoomManager.Rooms.Load(roomID)
 	if !ok {
@@ -677,7 +693,22 @@ func (ac *ApplicationController) Cmd(c echo.Context) (err error) {
 			),
 		)
 	}
-	msg := wsrooms.ConstructMessage(roomID, "cmd", "", "server", []byte(form.Name))
+
+	view := views.NewSoundView(sound)
+	b, err := json.Marshal(view)
+	if err != nil {
+		c.Logger().Error(err)
+		return c.JSON(
+			http.StatusInternalServerError,
+			newResponse(
+				http.StatusInternalServerError,
+				http.StatusText(http.StatusInternalServerError),
+				nil,
+			),
+		)
+	}
+
+	msg := wsrooms.ConstructMessage(roomID, "cmd", "", "server", b)
 	room.(*wsrooms.Room).Emit(nil, msg)
 	return c.NoContent(http.StatusNoContent)
 }
