@@ -16,7 +16,7 @@
           <nuxt-link
             :to="localePath({ name: 'users-id', params: { id: user.ID } })"
             v-if="user"
-            class="navbar-item has-text-white"
+            class="navbar-item"
           >
             {{ user.name }}
           </nuxt-link>

@@ -2,7 +2,7 @@
   <div class="container">
     <div v-if="user" class="content">
       <p class="title is-4">{{ user.name }}</p>
-      <p class="is-6" style="white-space:pre-line;">{{ user.description }}</p>
+      <div v-html="$md.render(user.description)" />
     </div>
     <p class="is-size-4">Apps</p>
     <div>

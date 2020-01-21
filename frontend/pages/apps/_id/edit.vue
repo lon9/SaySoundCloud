@@ -2,7 +2,9 @@
   <div v-if="app" class="container">
     <ErrorView :message="errorMsg" />
     <AppForm :app="app" :onSubmit="onAppSubmit" />
-    <p>Access token: {{ accessToken }}</p>
+    <div class="content">
+      <p>Access token for the application: {{ accessToken }}</p>
+    </div>
   </div>
 </template>
 <script>

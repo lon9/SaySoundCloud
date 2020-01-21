@@ -55,6 +55,7 @@ export default {
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
     '@nuxtjs/axios',
+    '@nuxtjs/markdownit',
     [
       'nuxt-i18n',
       {
@@ -74,6 +75,9 @@ export default {
       }
     ]
   ],
+  markdownit: {
+    injected: true
+  },
   /*
    ** Build configuration
    */
@@ -88,6 +92,7 @@ export default {
     BASE_URL: process.env.BASE_URL,
     APP_TITLE: process.env.APP_TITLE,
     APP_DESCRIPTION: process.env.APP_DESCRIPTION,
+    USE_FIREBASE: process.env.USE_FIREBASE,
     SOUND_BASE_URL: process.env.SOUND_BASE_URL
   },
   build: {

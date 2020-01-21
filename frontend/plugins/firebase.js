@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import 'firebase/storage'
 
 if (!firebase.apps.length) {
   firebase.initializeApp({
@@ -16,4 +17,5 @@ if (!firebase.apps.length) {
 export default (context, inject) => {
   inject('firebase', firebase)
   inject('auth', firebase.auth())
+  inject('storage', firebase.storage())
 }

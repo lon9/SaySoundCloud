@@ -23,6 +23,15 @@
       >
         Enter
       </nuxt-link>
+      <client-only>
+        <nuxt-link
+          v-if="user && user.ID === app.userId"
+          :to="localePath({ name: 'apps-id-edit', params: { id: app.ID } })"
+          class="card-footer-item"
+        >
+          Edit
+        </nuxt-link>
+      </client-only>
     </div>
   </div>
 </template>
@@ -32,6 +41,11 @@ export default {
     app: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    user() {
+      return this.$store.state.user
     }
   }
 }

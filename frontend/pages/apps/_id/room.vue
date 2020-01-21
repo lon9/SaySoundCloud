@@ -3,9 +3,7 @@
     <div v-if="app" class="content">
       <p class="title is-4">{{ app.name }}</p>
       <p class="subtitle is-6">@{{ app.user.name }}</p>
-      <p class="is-6" style="white-space:pre-line;">
-        {{ app.description }}
-      </p>
+      <div v-html="$md.render(app.description)" />
     </div>
     You can copy the command by clicking the command name.
     <div v-if="cmds.length !== 0" class="panel">
@@ -102,13 +100,19 @@ export default {
         const data = JSON.parse(e.data.toString())
         if (data.event === 'cmd') {
           const sound = JSON.parse(decodeURIComponent(atob(data.payload)))
-          try {
-            const source = await that.$axios.$get(
-              `${process.env.SOUND_BASE_URL}/${sound.path}`,
-              {
-                responseType: 'arraybuffer'
-              }
+          let url = ''
+          if (process.env.USE_FIREBASE === 'true') {
+            const ref = that.$storage.ref(
+              `${process.env.SOUND_BASE_URL}/${sound.path}`
             )
+            url = await ref.getDownloadURL()
+          } else {
+            url = `${process.env.SOUND_BASE_URL}/${sound.path}`
+          }
+          try {
+            const source = await that.$axios.$get(url, {
+              responseType: 'arraybuffer'
+            })
             that.audioCtx.decodeAudioData(source, function(buffer) {
               const source = that.audioCtx.createBufferSource()
               source.buffer = buffer

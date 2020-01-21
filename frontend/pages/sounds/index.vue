@@ -2,6 +2,7 @@
   <div class="container">
     <p>You can copy the command by clicking the link below</p>
     <SearchBox @search="searchSounds" place-holder="Find a sound" />
+    <Pagination @next="next" @prev="prev" :page="page" />
     <div class="panel">
       <a
         v-for="(sound, index) in sounds"

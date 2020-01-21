@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="field">
-      <label class="label">Description</label>
+      <label class="label">Description (You can use markdown)</label>
       <div class="control">
         <textarea
           v-model="profile.description"
