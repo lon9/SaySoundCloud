@@ -6,19 +6,19 @@ export default {
    ** Headers of the page
    */
   head: {
-    title: process.env.APP_TITLE || '',
+    title: process.env.APP_TITLE || 'SaySoundCloud',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
         hid: 'description',
         name: 'description',
-        content: process.env.APP_DESCRIPTION || ''
+        content: process.env.APP_DESCRIPTION || 'SaySound for cloud'
       },
       {
         hid: 'og:site_name',
         property: 'og:site_name',
-        content: process.env.OG_SITE_NAME
+        content: process.env.OG_SITE_NAME || 'SaySoundCloud'
       },
       {
         hid: 'og:type',
@@ -28,32 +28,32 @@ export default {
       {
         hid: 'og:url',
         property: 'og:url',
-        content: process.env.OG_URL
+        content: process.env.OG_URL || ''
       },
       {
         hid: 'og:title',
         property: 'og:title',
-        content: process.env.OG_TITLE
+        content: process.env.OG_TITLE || 'SaySoundCloud'
       },
       {
         hid: 'og:description',
         property: 'og:description',
-        content: process.env.OG_DESCRIPTION
+        content: process.env.OG_DESCRIPTION || 'SaySound for cloud'
       },
       {
         hid: 'og:image',
         property: 'og:image',
-        content: process.env.OG_IMAGE
+        content: process.env.OG_IMAGE || ''
       },
       {
         hid: 'twitter:card',
         name: 'twitter:card',
-        content: process.env.TWITTER_CARD
+        content: process.env.TWITTER_CARD || ''
       },
       {
         hid: 'twitter:site',
         name: 'twitter:site',
-        content: process.env.TWITTER_SITE
+        content: process.env.TWITTER_SITE || ''
       }
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
@@ -119,41 +119,41 @@ export default {
     injected: true
   },
   manifest: {
-    name: process.env.PWA_NAME,
-    shortname: process.env.PWA_SHORTNAME,
-    description: process.env.PWA_DESCRIPTION
+    name: process.env.PWA_NAME || 'SaySoundCloud',
+    shortname: process.env.PWA_SHORTNAME || 'SSC',
+    description: process.env.PWA_DESCRIPTION || 'SaySound for cloud'
   },
   /*
    ** Build configuration
    */
   env: {
     // for firebase
-    API_KEY: process.env.API_KEY,
-    AUTH_DOMAIN: process.env.AUTH_DOMAIN,
-    DATABASE_URL: process.env.DATABASE_URL,
-    PROJECT_ID: process.env.PROJECT_ID,
-    STORAGE_BUCKET: process.env.STORAGE_BUCKET,
-    MESSAGING_SENDER_ID: process.env.MESSAGING_SENDER_ID,
-    APP_ID: process.env.APP_ID,
+    API_KEY: process.env.API_KEY || '',
+    AUTH_DOMAIN: process.env.AUTH_DOMAIN || '',
+    DATABASE_URL: process.env.DATABASE_URL || '',
+    PROJECT_ID: process.env.PROJECT_ID || '',
+    STORAGE_BUCKET: process.env.STORAGE_BUCKET || '',
+    MESSAGING_SENDER_ID: process.env.MESSAGING_SENDER_ID || '',
+    APP_ID: process.env.APP_ID || '',
     // for app
-    BASE_URL: process.env.BASE_URL,
-    APP_TITLE: process.env.APP_TITLE,
-    APP_DESCRIPTION: process.env.APP_DESCRIPTION,
-    USE_FIREBASE: process.env.USE_FIREBASE,
-    SOUND_BASE_URL: process.env.SOUND_BASE_URL,
+    BASE_URL: process.env.BASE_URL || 'http://localhost:3001',
+    APP_TITLE: process.env.APP_TITLE || 'SaySoundCloud',
+    APP_DESCRIPTION: process.env.APP_DESCRIPTION || 'SaySound for cloud',
+    USE_FIREBASE: process.env.USE_FIREBASE || false,
+    SOUND_BASE_URL: process.env.SOUND_BASE_URL || '',
     // for open graph
-    OG_SITE_NAME: process.env.OG_SITE_NAME,
-    OG_URL: process.env.OG_URL,
-    OG_TITLE: process.env.OG_URL,
-    OG_DESCRIPTION: process.env.OG_DESCRIPTION,
-    OG_IMAGE: process.env.OG_IMAGE,
+    OG_SITE_NAME: process.env.OG_SITE_NAME || 'SaySoundCloud',
+    OG_URL: process.env.OG_URL || '',
+    OG_TITLE: process.env.OG_URL || 'SaySoundCloud',
+    OG_DESCRIPTION: process.env.OG_DESCRIPTION || 'SaySound for cloud',
+    OG_IMAGE: process.env.OG_IMAGE || '',
     // for twitter card
-    TWITTER_CARD: process.env.TWITTER_CARD,
-    TWITTER_SITE: process.env.TWITTER_SITE,
+    TWITTER_CARD: process.env.TWITTER_CARD || '',
+    TWITTER_SITE: process.env.TWITTER_SITE || '',
     // for pwa
-    PWA_NAME: process.env.PWA_NAME,
-    PWA_SHORTNAME: process.env.PWA_SHORTNAME,
-    PWA_DESCRIPTION: process.env.PWA_DESCRIPTION
+    PWA_NAME: process.env.PWA_NAME || 'SaySoundCloud',
+    PWA_SHORTNAME: process.env.PWA_SHORTNAME || 'SSC',
+    PWA_DESCRIPTION: process.env.PWA_DESCRIPTION || 'SaySound for cloud'
   },
   build: {
     babel: {
