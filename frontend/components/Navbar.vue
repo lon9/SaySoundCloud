@@ -1,14 +1,18 @@
 <template>
   <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <nuxt-link to="/" class="navbar-item">
+      <nuxt-link :to="localePath({ path: '/' })" class="navbar-item">
         {{ appTitle }}
       </nuxt-link>
     </div>
     <div class="navbar-menu is-active">
       <div class="navbar-start">
-        <a href="/sounds" target="_blank" class="navbar-item">
-          Command list
+        <a
+          :href="localePath({ path: '/sounds' })"
+          target="_blank"
+          class="navbar-item"
+        >
+          {{ $t('commandList') }}
         </a>
       </div>
       <client-only>
@@ -26,7 +30,7 @@
                 :to="localePath({ name: 'apps-create' })"
                 class="button"
               >
-                Create app
+                {{ $t('createApp') }}
               </nuxt-link>
               <nuxt-link
                 :to="localePath({ name: 'users-edit' })"
@@ -67,7 +71,7 @@ export default {
   methods: {
     async signOut() {
       await this.$store.dispatch('signOut')
-      this.$router.push({ path: '/' })
+      this.$router.push(this.localePath({ path: '/' }))
     }
   }
 }

@@ -3,7 +3,7 @@
     <ErrorView :message="errorMsg" />
     <AppForm :app="app" :onSubmit="onAppSubmit" />
     <div class="content">
-      <p>Access token for the application: {{ accessToken }}</p>
+      <p>{{ $t('accessTokenLabel') }}: {{ accessToken }}</p>
     </div>
   </div>
 </template>
@@ -38,9 +38,11 @@ export default {
           `/apps/${this.$route.params.id}`,
           this.app
         )
-        this.$router.push({ path: `/apps/${res.result.ID}/edit` })
+        this.$router.push(
+          this.localePath({ path: `/apps/${res.result.ID}/edit` })
+        )
       } catch {
-        this.errorMsg = 'Failed to update'
+        this.errorMsg = this.$t('failedToEdit')
       }
     }
   }

@@ -15,13 +15,13 @@
         :to="localePath({ name: 'apps-id', params: { id: app.ID } })"
         class="card-footer-item"
       >
-        Detail
+        {{ $t('detail') }}
       </nuxt-link>
       <nuxt-link
         :to="localePath({ name: 'apps-id-room', params: { id: app.ID } })"
         class="card-footer-item"
       >
-        Enter
+        {{ $t('enter') }}
       </nuxt-link>
       <client-only>
         <nuxt-link
@@ -29,7 +29,7 @@
           :to="localePath({ name: 'apps-id-edit', params: { id: app.ID } })"
           class="card-footer-item"
         >
-          Edit
+          {{ $t('edit') }}
         </nuxt-link>
       </client-only>
     </div>

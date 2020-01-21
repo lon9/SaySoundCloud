@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <p>You can copy the command by clicking the link below</p>
-    <SearchBox @search="searchSounds" place-holder="Find a sound" />
+    <p>{{ $t('canCopyDesc') }}</p>
+    <SearchBox @search="searchSounds" :place-holder="$t('findSound')" />
     <Pagination @next="next" @prev="prev" :page="page" />
     <div class="panel">
       <a

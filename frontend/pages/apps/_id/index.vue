@@ -5,27 +5,29 @@
       <p class="title is-4">{{ app.name }}</p>
       <p class="subtitle is-6">@{{ app.user.name }}</p>
       <div v-html="$md.render(app.description)" />
-      <p v-if="app.isPassword" class="is-6">password &#10003;</p>
-      <p v-else class="is-6">password &#10005;</p>
+      <p v-if="app.isPassword" class="is-6">
+        {{ $t('passwordLabel') }} &#10003;
+      </p>
+      <p v-else class="is-6">{{ $t('passwordLabel') }} &#10005;</p>
       <nuxt-link
         :to="localePath({ name: 'apps-id-room', params: { id: app.ID } })"
         class="button"
       >
-        Enter
+        {{ $t('enter') }}
       </nuxt-link>
       <nuxt-link
         v-if="user && user.ID == app.userId"
         :to="localePath({ name: 'apps-id-edit', params: { id: app.ID } })"
         class="button"
       >
-        Edit
+        {{ $t('edit') }}
       </nuxt-link>
       <a
         v-if="user && user.ID == app.userId"
         @click="deleteApp"
         class="button is-danger"
       >
-        Delete
+        {{ $t('delete') }}
       </a>
     </div>
   </div>
@@ -56,9 +58,9 @@ export default {
     async deleteApp() {
       this.errorMsg = ''
       if (await this.$store.dispatch('deleteApp', this.app.ID)) {
-        this.$router.push({ path: '/' })
+        this.$router.push(this.localePath({ path: '/' }))
       } else {
-        this.errorMsg = 'Failed to delete'
+        this.errorMsg = this.$t('failedToDelete')
       }
     }
   }

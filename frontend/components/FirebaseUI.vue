@@ -25,7 +25,7 @@ export default {
       }
       ui.disableAutoSignIn()
       if (this.$store.state.user) {
-        this.$router.push({ path: '/' })
+        this.$router.push(this.localePath({ path: '/' }))
       } else {
         ui.start('#firebaseui-auth-container', config)
       }
@@ -44,11 +44,11 @@ export default {
       const token = await user.getIdToken()
       this.$store.commit('setToken', token)
       if (await this.$store.dispatch('createUser')) {
-        this.$router.push({ path: '/users/edit' })
+        this.$router.push(this.localePath({ path: '/users/edit' }))
         return false
       }
       await this.$store.dispatch('getLoginUser')
-      this.$router.push({ path: '/' })
+      this.$router.push(this.localePath({ path: '/' }))
       return false
     }
   }

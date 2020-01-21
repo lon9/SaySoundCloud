@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <SearchBox @search="searchApps" place-holder="Find an application" />
+    <SearchBox @search="searchApps" :place-holder="$t('findApp')" />
     <div>
       <AppView v-for="app in apps" :key="app.ID" :app="app" />
     </div>

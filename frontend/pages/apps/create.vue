@@ -24,9 +24,11 @@ export default {
       this.errorMsg = ''
       try {
         const res = await this.$axios.$post('/apps', this.app)
-        this.$router.push({ path: `/apps/${res.result.ID}/edit` })
+        this.$router.push(
+          this.localePath({ path: `/apps/${res.result.ID}/edit` })
+        )
       } catch {
-        this.errorMsg = 'Failed to create'
+        this.errorMsg = this.$t('failedToCreate')
       }
     }
   }

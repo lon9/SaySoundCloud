@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="field">
-      <div class="label">Name</div>
+      <div class="label">{{ $t('nameLabel') }}</div>
       <div class="control">
         <input
           v-model="profile.name"
@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="field">
-      <label class="label">Description (You can use markdown)</label>
+      <label class="label">{{ $t('descriptionLabel') }}</label>
       <div class="control">
         <textarea
           v-model="profile.description"
@@ -23,7 +23,9 @@
     </div>
     <div class="field is-grouped">
       <div class="control">
-        <button @click="onSubmit" class="button is-link">Submit</button>
+        <button @click="onSubmit" class="button is-link">
+          {{ $t('submitLabel') }}
+        </button>
       </div>
     </div>
   </div>

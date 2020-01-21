@@ -11,7 +11,7 @@
     </div>
     <div class="control">
       <a @click="$emit('search', query)" class="button is-info">
-        Search
+        {{ $t('search') }}
       </a>
     </div>
   </div>

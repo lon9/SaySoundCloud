@@ -3,11 +3,11 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Password required</p>
+        <p class="modal-card-title">{{ $t('passwordRequired') }}</p>
       </header>
       <section class="modal-card-body">
         <div class="field">
-          <label class="label">Password</label>
+          <label class="label">{{ $t('passwordLabel') }}</label>
           <div class="control">
             <input v-model="password" class="input" type="password" />
           </div>
@@ -15,7 +15,7 @@
       </section>
       <footer class="modal-card-foot">
         <button @click="$emit('onSubmit', password)" class="button is-success">
-          Submit
+          {{ $t('submitLabel') }}
         </button>
       </footer>
     </div>

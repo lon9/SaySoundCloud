@@ -5,7 +5,7 @@
       <p class="subtitle is-6">@{{ app.user.name }}</p>
       <div v-html="$md.render(app.description)" />
     </div>
-    You can copy the command by clicking the command name.
+    {{ $t('canCopyDesc') }}
     <div v-if="cmds.length !== 0" class="panel">
       <a
         v-for="(cmd, index) in cmds"
@@ -61,7 +61,7 @@ export default {
       window.AudioContext = window.AudioContext || window.webkitAudioContext
       this.audioCtx = new AudioContext()
     } catch {
-      this.$router.push({ path: '/' })
+      this.$router.push(this.localePath({ path: '/' }))
     }
   },
   methods: {

@@ -1,10 +1,10 @@
 <template>
   <div class="pagination is-centered" role="navigation" aria-label="pagination">
-    <a v-if="page !== 1" @click="$emit('prev')" class="pagination-previous"
-      >Prev</a
-    >
-    <a v-else class="pagination-previous" disabled>Prev</a>
-    <a @click="$emit('next')" class="pagination-next">Next</a>
+    <a v-if="page !== 1" @click="$emit('prev')" class="pagination-previous">{{
+      $t('prev')
+    }}</a>
+    <a v-else class="pagination-previous" disabled>{{ $t('prev') }}</a>
+    <a @click="$emit('next')" class="pagination-next">{{ $t('next') }}</a>
     <ul class="pagination-list">
       <li v-if="page !== 1">
         <a @click="$emit('prev')" class="pagination-link">

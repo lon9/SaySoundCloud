@@ -4,7 +4,7 @@
       <p class="title is-4">{{ user.name }}</p>
       <div v-html="$md.render(user.description)" />
     </div>
-    <p class="is-size-4">Apps</p>
+    <p class="is-size-4">{{ $t('apps') }}</p>
     <div>
       <AppView v-for="app in apps" :key="app.ID" :app="app" />
     </div>

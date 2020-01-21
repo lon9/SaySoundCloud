@@ -2,7 +2,7 @@
   <div class="container">
     <ErrorView :message="errorMsg" />
     <UserForm :profile="profile" :on-submit="onUserSubmit" />
-    <p class="is-size-4">Your apps</p>
+    <p class="is-size-4">{{ $t('yourApps') }}</p>
     <div class="container">
       <AppView v-for="app in apps" :key="app.ID" :app="app" />
     </div>
@@ -43,9 +43,11 @@ export default {
       this.errMsg = ''
       const user = await this.$store.dispatch('updateUser', this.profile)
       if (user) {
-        this.$router.push({ path: `/users/${this.$store.state.user.ID}` })
+        this.$router.push(
+          this.localePath({ path: `/users/${this.$store.state.user.ID}` })
+        )
       } else {
-        this.errorMsg = 'Failed to edit'
+        this.errorMsg = this.$t('failedToEdit')
       }
     }
   }
