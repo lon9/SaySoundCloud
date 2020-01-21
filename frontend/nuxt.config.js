@@ -14,6 +14,46 @@ export default {
         hid: 'description',
         name: 'description',
         content: process.env.APP_DESCRIPTION || ''
+      },
+      {
+        hid: 'og:site_name',
+        property: 'og:site_name',
+        content: process.env.OG_SITE_NAME
+      },
+      {
+        hid: 'og:type',
+        property: 'og:type',
+        content: 'website'
+      },
+      {
+        hid: 'og:url',
+        property: 'og:url',
+        content: process.env.OG_URL
+      },
+      {
+        hid: 'og:title',
+        property: 'og:title',
+        content: process.env.OG_TITLE
+      },
+      {
+        hid: 'og:description',
+        property: 'og:description',
+        content: process.env.OG_DESCRIPTION
+      },
+      {
+        hid: 'og:image',
+        property: 'og:image',
+        content: process.env.OG_IMAGE
+      },
+      {
+        hid: 'twitter:card',
+        name: 'twitter:card',
+        content: process.env.TWITTER_CARD
+      },
+      {
+        hid: 'twitter:site',
+        name: 'twitter:site',
+        content: process.env.TWITTER_SITE
       }
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
@@ -78,10 +118,16 @@ export default {
   markdownit: {
     injected: true
   },
+  manifest: {
+    name: process.env.PWA_NAME,
+    shortname: process.env.PWA_SHORTNAME,
+    description: process.env.PWA_DESCRIPTION
+  },
   /*
    ** Build configuration
    */
   env: {
+    // for firebase
     API_KEY: process.env.API_KEY,
     AUTH_DOMAIN: process.env.AUTH_DOMAIN,
     DATABASE_URL: process.env.DATABASE_URL,
@@ -89,11 +135,25 @@ export default {
     STORAGE_BUCKET: process.env.STORAGE_BUCKET,
     MESSAGING_SENDER_ID: process.env.MESSAGING_SENDER_ID,
     APP_ID: process.env.APP_ID,
+    // for app
     BASE_URL: process.env.BASE_URL,
     APP_TITLE: process.env.APP_TITLE,
     APP_DESCRIPTION: process.env.APP_DESCRIPTION,
     USE_FIREBASE: process.env.USE_FIREBASE,
-    SOUND_BASE_URL: process.env.SOUND_BASE_URL
+    SOUND_BASE_URL: process.env.SOUND_BASE_URL,
+    // for open graph
+    OG_SITE_NAME: process.env.OG_SITE_NAME,
+    OG_URL: process.env.OG_URL,
+    OG_TITLE: process.env.OG_URL,
+    OG_DESCRIPTION: process.env.OG_DESCRIPTION,
+    OG_IMAGE: process.env.OG_IMAGE,
+    // for twitter card
+    TWITTER_CARD: process.env.TWITTER_CARD,
+    TWITTER_SITE: process.env.TWITTER_SITE,
+    // for pwa
+    PWA_NAME: process.env.PWA_NAME,
+    PWA_SHORTNAME: process.env.PWA_SHORTNAME,
+    PWA_DESCRIPTION: process.env.PWA_DESCRIPTION
   },
   build: {
     babel: {
