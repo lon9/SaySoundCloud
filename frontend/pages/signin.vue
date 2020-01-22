@@ -6,10 +6,10 @@
   </div>
 </template>
 <script>
-import FirebaseUi from '~/components/FirebaseUi'
+import FirebaseUI from '~/components/FirebaseUI'
 export default {
   components: {
-    FirebaseUi
+    FirebaseUI
   }
 }
 </script>

@@ -1,12 +1,11 @@
 FROM golang:alpine as build-env
 
-RUN apk add --no-cache git
+RUN apk add --no-cache git gcc musl-dev
 
 ADD . /go/src/github.com/lon9/SaySoundCloud/backend
 WORKDIR /go/src/github.com/lon9/SaySoundCloud/backend
 
-RUN go get -v && \
-    go build -o /usr/bin/app
+RUN go get -v && go build -o /usr/bin/app
 
 FROM alpine
 
