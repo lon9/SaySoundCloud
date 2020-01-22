@@ -6,5 +6,5 @@ server:
     port: "3001"
     cors:
         - "http://localhost:3000"
-    firebase_config: "firebase.json"
+    firebase_config: "./config/firebase/firebase.json"
     access_token_secret: "114514"

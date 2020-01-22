@@ -5,14 +5,93 @@ services:
         volumes:
             - dbdata:/var/lib/postgresql/data
         environment:
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-        ports:
-            - 5432:5432
+            POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+        expose:
+            - "5432"
+        restart: always
+
+    backend:
+        build:
+            context: ./backend
+        environment:
+            VIRTUAL_HOST: "${BACKEND_VIRTUAL_HOST}"
+            LETSENCRYPT_HOST: "${BACKEND_LETSENCRYPT_HOST}"
+            LETSENCRYPT_EMAIL: "${BACKEND_LETSENCRYPT_EMAIL}"
+        expose:
+            - "${BACKEND_PORT}"
+        command: app -e production
+        restart: always
+        depends_on: 
+            - db
+        secrets:
+            - production.yml
+
+    frontend:
+        build:
+            context: ./frontend
+            args:
+                API_KEY: "${API_KEY}"
+                AUTH_DOMAIN: "${AUTH_DOMAIN}"
+                DATABASE_URL: "${DATABASE_URL}"
+                PROJECT_ID: "${PROJECT_ID}"
+                BASE_URL: "${BASE_URL}"
+                APP_TITLE: "${APP_TITLE}"
+                APP_DESCRIPTION: "${APP_DESCRIPTION}"
+                USE_FIREBASE: "${USE_FIREBASE}"
+                SOUND_BASE_URL: "${SOUND_BASE_URL}"
+                OG_SITE_NAME: "${OG_SITE_NAME}"
+                OG_URL: "${OG_URL}"
+                OG_TITLE: "${OG_TITLE}"
+                OG_DESCRIPTION: "${OG_DESCRIPTION}"
+                OG_IMAGE: "${OG_IMAGE}"
+                TWITTER_CARD: "${TWITTER_CARD}"
+                TWITTER_SITE: "${TWITTER_SITE}"
+                PWA_NAME: "${PWA_NAME}"
+                PWA_SHORTNAME: "${PWA_SHORTNAME}"
+                PWA_DESCRIPTION: "${PWA_DESCRIPTION}"
+        environment:
+            API_KEY: "${API_KEY}"
+            AUTH_DOMAIN: "${AUTH_DOMAIN}"
+            DATABASE_URL: "${DATABASE_URL}"
+            PROJECT_ID: "${PROJECT_ID}"
+            BASE_URL: "${BASE_URL}"
+            APP_TITLE: "${APP_TITLE}"
+            APP_DESCRIPTION: "${APP_DESCRIPTION}"
+            USE_FIREBASE: "${USE_FIREBASE}"
+            SOUND_BASE_URL: "${SOUND_BASE_URL}"
+            OG_SITE_NAME: "${OG_SITE_NAME}"
+            OG_URL: "${OG_URL}"
+            OG_TITLE: "${OG_TITLE}"
+            OG_DESCRIPTION: "${OG_DESCRIPTION}"
+            OG_IMAGE: "${OG_IMAGE}"
+            TWITTER_CARD: "${TWITTER_CARD}"
+            TWITTER_SITE: "${TWITTER_SITE}"
+            PWA_NAME: "${PWA_NAME}"
+            PWA_SHORTNAME: "${PWA_SHORTNAME}"
+            PWA_DESCRIPTION: "${PWA_DESCRIPTION}"
+            VIRTUAL_HOST: "${FRONTEND_VIRTUAL_HOST}"
+            LETSENCRYPT_HOST: "${FRONTEND_LETSENCRYPT_HOST}"
+            LETSENCRYPT_EMAIL: "${FRONTEND_LETSENCRYPT_EMAIL}"
+            NUXT_HOST: "0.0.0.0"
+        expose:
+            - "3000"
+        command: yarn start
+        restart: always
+        depends_on:
+            - backend
+            
 
 volumes:
     dbdata:
+
+secrets:
+    production.yml:
+        file: ./backend/config/environments/production.yml
+    firebase.json:
+        file: ./backend/config/firebase/firebase.json
 
 networks:
     default:
         external:
             name: webproxy
+

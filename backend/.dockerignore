@@ -1,0 +1,6 @@
+backend
+.env
+.gitignore
+config/environments
+config/firebase
+fixtures

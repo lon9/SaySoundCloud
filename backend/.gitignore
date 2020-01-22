@@ -21,3 +21,5 @@ backend
 firebase.json
 gettoken
 *.db
+config/environments
+!config/environments/development.yml
