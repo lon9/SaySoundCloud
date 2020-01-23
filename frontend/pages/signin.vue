@@ -1,7 +1,7 @@
 <template>
   <div>
     <client-only>
-      <firebase-ui />
+      <firebase-u-i />
     </client-only>
   </div>
 </template>
