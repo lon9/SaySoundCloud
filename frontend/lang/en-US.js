@@ -24,5 +24,8 @@ export default {
   findSound: 'Find a sound',
   failedToEdit: 'Failed to edit',
   failedToCreate: 'Failed to create',
-  failedToDelete: 'Failed to delete'
+  failedToDelete: 'Failed to delete',
+  copy: 'Copy',
+  renewToken: 'Renew token',
+  failedToRenew: 'Failed to renew token'
 }

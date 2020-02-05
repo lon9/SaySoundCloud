@@ -24,5 +24,8 @@ export default {
   findSound: '音声検索',
   failedToEdit: '編集に失敗しました。',
   failedToCreate: '作成に失敗しました。',
-  failedToDelete: '削除に失敗しました。'
+  failedToDelete: '削除に失敗しました。',
+  copy: 'コピー',
+  renewToken: 'トークン更新',
+  failedToRenew: 'トークンの更新に失敗しました。'
 }
