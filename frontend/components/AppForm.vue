@@ -30,7 +30,7 @@
     <div class="field is-grouped">
       <div class="control">
         <button @click="onSubmit" class="button is-link">
-          {{ $t('submit') }}
+          {{ $t('submitLabel') }}
         </button>
       </div>
     </div>
