@@ -710,5 +710,19 @@ func (ac *ApplicationController) Cmd(c echo.Context) (err error) {
 
 	msg := wsrooms.ConstructMessage(roomID, "cmd", "", "server", b)
 	room.(*wsrooms.Room).Emit(nil, msg)
+
+	sound.NumCalls++
+	if err := sound.Update(); err != nil {
+		c.Logger().Error(err)
+		return c.JSON(
+			http.StatusInternalServerError,
+			newResponse(
+				http.StatusInternalServerError,
+				http.StatusText(http.StatusInternalServerError),
+				nil,
+			),
+		)
+	}
+
 	return c.NoContent(http.StatusNoContent)
 }
