@@ -40,5 +40,5 @@ func (ss *Sounds) List(offset, limit int) (err error) {
 func (ss *Sounds) SearchByName(name string, offset, limit int) (err error) {
 	db := database.GetDB()
 	query := fmt.Sprintf("%%%s%%", name)
-	return db.Where("name LIKE ?", query).Order("num_cells desc").Order("name asc").Limit(limit).Offset(offset).Find(ss).Error
+	return db.Where("name LIKE ?", query).Order("num_calls desc").Order("name asc").Limit(limit).Offset(offset).Find(ss).Error
 }
