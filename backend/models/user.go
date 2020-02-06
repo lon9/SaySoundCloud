@@ -1,12 +1,11 @@
 package models
 
 import (
-	"github.com/dgrijalva/jwt-go"
+	"encoding/base64"
+
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
-	"github.com/lon9/SaySoundCloud/backend/config"
 	"github.com/lon9/SaySoundCloud/backend/database"
-	"golang.org/x/crypto/bcrypt"
 )
 
 // User is struct of user
@@ -56,22 +55,12 @@ func (u *User) Delete() (err error) {
 
 // GenerateAccessToken generates access token from user
 func (u *User) GenerateAccessToken() (token string, err error) {
-	bareToken := jwt.NewWithClaims(jwt.SigningMethodHS512, jwt.StandardClaims{
-		Audience: string(u.ID),
-		Subject:  u.UID,
-		Id:       uuid.New().String(),
-	})
-
-	access, err := bareToken.SignedString([]byte(config.GetConfig().GetString("server.access_token_secret")))
+	id := uuid.New()
+	idBytes, err := id.MarshalBinary()
 	if err != nil {
-		return
+		return "", err
 	}
-
-	hashed, err := bcrypt.GenerateFromPassword([]byte(access), bcrypt.DefaultCost)
-	if err != nil {
-		return
-	}
-	return string(hashed), nil
+	return base64.RawURLEncoding.EncodeToString(idBytes), nil
 }
 
 // Users is slice of users
