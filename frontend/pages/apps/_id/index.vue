@@ -3,12 +3,16 @@
     <ErrorView :message="errorMsg" />
     <div v-if="app" class="content">
       <p class="title is-4">{{ app.name }}</p>
-      <p class="subtitle is-6">@{{ app.user.name }}</p>
-      <div v-html="$md.render(app.description)" />
-      <p v-if="app.isPassword" class="is-6">
-        {{ $t('passwordLabel') }} &#10003;
+      <p class="subtitle is-6">
+        <nuxt-link
+          :to="localePath({ name: 'users-id', params: { id: app.userId } })"
+        >
+          @{{ app.user.name }}
+        </nuxt-link>
       </p>
-      <p v-else class="is-6">{{ $t('passwordLabel') }} &#10005;</p>
+      <div v-html="$md.render(app.description)" />
+      <p v-if="app.isPassword" class="is-6">{{ $t('password') }} &#10003;</p>
+      <p v-else class="is-6">{{ $t('password') }} &#10005;</p>
       <nuxt-link
         :to="localePath({ name: 'apps-id-room', params: { id: app.ID } })"
         class="button"

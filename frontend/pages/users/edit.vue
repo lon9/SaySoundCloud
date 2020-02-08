@@ -2,7 +2,6 @@
   <div class="container">
     <ErrorView :message="errorMsg" />
     <UserForm :profile="profile" :on-submit="onUserSubmit" />
-    <p class="is-size-4">{{ $t('yourApps') }}</p>
     <div class="container">
       <AppView v-for="app in apps" :key="app.ID" :app="app" />
     </div>

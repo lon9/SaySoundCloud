@@ -7,9 +7,14 @@
       </header>
       <section class="modal-card-body">
         <div class="field">
-          <label class="label">{{ $t('passwordLabel') }}</label>
+          <label class="label">{{ $t('password') }}</label>
           <div class="control">
-            <input v-model="password" class="input" type="password" />
+            <input
+              v-model="password"
+              @keydown.enter="$emit('onSubmit', password)"
+              class="input"
+              type="password"
+            />
           </div>
         </div>
       </section>
