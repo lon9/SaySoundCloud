@@ -15,8 +15,9 @@ export default {
       const config = {
         credentialHelper: firebaseui.auth.CredentialHelper.NONE,
         signInOptions: [
+          this.$firebase.auth.TwitterAuthProvider.PROVIDER_ID,
           this.$firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-          this.$firebase.auth.EmailAuthProvider.PROVIDER_ID
+          this.$firebase.auth.GithubAuthProvider.PROVIDER_ID
         ],
         signInFlow: 'popup',
         callbacks: {
