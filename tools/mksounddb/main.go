@@ -62,6 +62,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer db.Close()
 
 	db.AutoMigrate(new(models.Sound))
 	if !dryRun {

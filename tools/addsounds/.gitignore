@@ -1,4 +1,4 @@
-### https://raw.github.com/github/gitignore/6c87d249af5f2b3f8ab65ae0a2648682ee4e8a2d/Go.gitignore
+### https://raw.github.com/github/gitignore/55df35ee63aef4a6f859559af980c9fb87bee1a1/Go.gitignore
 
 # Binaries for programs and plugins
 *.exe
@@ -16,4 +16,5 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
-presound
+
+addsounds

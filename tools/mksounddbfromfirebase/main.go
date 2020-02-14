@@ -7,15 +7,13 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lon9/SaySoundCloud/backend/models"
-
-	"google.golang.org/api/iterator"
-
 	firebase "firebase.google.com/go"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/lon9/SaySoundCloud/backend/models"
+	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 )
 

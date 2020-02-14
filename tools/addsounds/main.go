@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"crypto/md5"
 	"flag"
 	"fmt"
@@ -11,11 +12,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/jinzhu/gorm"
+	"cloud.google.com/go/storage"
+	firebase "firebase.google.com/go"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/lon9/SaySoundCloud/backend/models"
+	"google.golang.org/api/option"
 )
 
 var exts = []string{".mp3", ".wav", ".ogg", ".aac"}
@@ -36,22 +38,58 @@ type localSound struct {
 	Ext      string
 }
 
+func isOnFirebase(ctx context.Context, bucket *storage.BucketHandle, cmdName, fileName string) (bool, error) {
+	h := md5.New()
+	io.WriteString(h, cmdName)
+	p := filepath.Join("sounds", fmt.Sprintf("%x", h.Sum(nil))[:2], fileName)
+	_, err := bucket.Object(p).Attrs(ctx)
+	if err == storage.ErrObjectNotExist {
+		return false, nil
+	}
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
 func main() {
 
 	var (
-		inputDir   string
-		outputDir  string
-		dbURL      string
-		dbProvider string
-		dryRun     bool
+		bucketURL string
+		credPath  string
+		inputDir  string
+		outputDir string
+		dryRun    bool
 	)
-
+	flag.StringVar(&bucketURL, "b", "", "URL of the storage bucket")
+	flag.StringVar(&credPath, "c", "../../backend/config/firebase/firebase.json", "Path for file of firebase credential")
 	flag.StringVar(&inputDir, "i", "../../sounds/saysound/ps_saysounds_2019_0118/sound/misc/", "Input directory")
 	flag.StringVar(&outputDir, "o", "../../sounds/saysound/output", "Output directory")
-	flag.StringVar(&dbURL, "u", "../../backend/database/dev.db", "Database url")
-	flag.StringVar(&dbProvider, "p", "sqlite3", "Database provider. sqlite3 or postgres or mysql")
 	flag.BoolVar(&dryRun, "d", false, "Dry run")
 	flag.Parse()
+
+	if bucketURL == "" {
+		log.Fatalln("bucketURL must be set")
+	}
+
+	ctx := context.Background()
+	config := &firebase.Config{
+		StorageBucket: bucketURL,
+	}
+	app, err := firebase.NewApp(ctx, config, option.WithCredentialsFile(credPath))
+	if err != nil {
+		panic(err)
+	}
+
+	client, err := app.Storage(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	bucket, err := client.DefaultBucket()
+	if err != nil {
+		panic(err)
+	}
 
 	sounds := make(map[string][]localSound)
 	newSounds := make(map[string][]localSound)
@@ -97,7 +135,11 @@ func main() {
 					index = 1
 					for {
 						newName = cmd.CmdName + strconv.Itoa(index)
-						if _, ok := newSounds[newName]; ok {
+						onFirebase, err := isOnFirebase(ctx, bucket, newName, newName+cmd.Ext)
+						if err != nil {
+							panic(err)
+						}
+						if _, ok := newSounds[newName]; ok || onFirebase {
 							index++
 							continue
 						}
@@ -107,7 +149,11 @@ func main() {
 					for {
 						index++
 						newName = cmd.CmdName[:len(cmd.CmdName)-1] + strconv.Itoa(index)
-						if _, ok := newSounds[newName]; ok {
+						onFirebase, err := isOnFirebase(ctx, bucket, newName, newName+cmd.Ext)
+						if err != nil {
+							panic(err)
+						}
+						if _, ok := newSounds[newName]; ok || onFirebase {
 							continue
 						}
 						break
@@ -129,7 +175,6 @@ func main() {
 		}
 		newSounds[k] = []localSound{v[0]}
 	}
-
 	// assertion
 	for _, v := range newSounds {
 		if len(v) != 1 {
@@ -140,16 +185,7 @@ func main() {
 		log.Fatalf("The number of sounds is invalid %d:%d", len(newSounds), numSounds)
 	}
 
-	db, err := gorm.Open(dbProvider, dbURL)
-	if err != nil {
-		panic(err)
-	}
-
-	db.AutoMigrate(new(models.Sound))
-
 	// Move to output directory
-	var idx int
-	records := make([]models.Sound, len(newSounds))
 	for _, v := range newSounds {
 		src := v[0].Path
 		h := md5.New()
@@ -164,20 +200,6 @@ func main() {
 				panic(err)
 			}
 			if err := os.Rename(src, dst); err != nil {
-				panic(err)
-			}
-		}
-		record := models.Sound{
-			Name: v[0].CmdName,
-			Path: filepath.Join(dir, v[0].FileName),
-		}
-		records[idx] = record
-		idx++
-	}
-
-	if !dryRun {
-		for i := range records {
-			if err := db.Create(&records[i]).Error; err != nil {
 				panic(err)
 			}
 		}
