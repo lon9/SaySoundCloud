@@ -1,6 +1,6 @@
 version: "3.5"
 services:
-    db:
+    sscdb:
         image: postgres:alpine
         volumes:
             - dbdata:/var/lib/postgresql/data
@@ -10,7 +10,7 @@ services:
             - "5432"
         restart: always
 
-    backend:
+    sscbackend:
         build:
             context: ./backend
         environment:
@@ -22,11 +22,11 @@ services:
         command: app -e production
         restart: always
         depends_on:
-            - db
+            - sscdb
         secrets:
             - production.yml
 
-    frontend:
+    sscfrontend:
         build:
             context: ./frontend
             args:
@@ -84,7 +84,18 @@ services:
         command: yarn start
         restart: always
         depends_on:
-            - backend
+            - sscbackend
+
+    sscmksounddbfromfirebase:
+        build:
+            context: ./tools/mksounddbfromfirebase
+            args:
+                GITHUB_ACCES_TOKEN: "${GITHUB_ACCESS_TOKEN}"
+        depends_on:
+            - sscdb
+        command: app -c /run/secrets/firebase.json -p postgres -u "${DB_URL}" -b "{STORAGE_BUCKET}"
+        secrets:
+            - firebase.json
 
 
 volumes:
