@@ -15,6 +15,7 @@ SaySoundCloud is a framework to build a cloud native SaySound service for many g
 ## Contribution
 
 The framework supports multi languages, but I can use just English and Japanese. So please add more languages, and off course welcome to join the development.
+Also, please contribute to develop plugins for other applications and games.
 
 ## For Japanese speakers
 
@@ -27,4 +28,5 @@ SaySoundCloudはクラウド技術を使い手軽に音声を流せるサービ�
 
 
 ### 貢献
-このフレームワークは多言語に対応していますが、現状英語と日本語にしか対応していません。他の言語を追加していただけると助かります。また、開発への参加も歓迎いたします。
+このフレームワークは多言語に対応していますが、現状英語と日本語にしか対応していません。他の言語を追加していただけると助かります。
+また、プラグインに関しても色々なアプリケーションやゲームなど充実させていきたいと考えております。そちらについても奮って開発に参加していただけるとありがたいです。
