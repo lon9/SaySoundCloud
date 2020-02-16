@@ -90,7 +90,7 @@ services:
         build:
             context: ./tools/mksounddbfromfirebase
             args:
-                GITHUB_ACCES_TOKEN: "${GITHUB_ACCESS_TOKEN}"
+                GITHUB_ACCESS_TOKEN: "${GITHUB_ACCESS_TOKEN}"
         depends_on:
             - sscdb
         command: app -c /run/secrets/firebase.json -p postgres -u "${DB_URL}" -b "${STORAGE_BUCKET}"
