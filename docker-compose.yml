@@ -25,6 +25,7 @@ services:
             - sscdb
         secrets:
             - production.yml
+            - firebase.json
 
     sscfrontend:
         build:
