@@ -8,24 +8,30 @@ import (
 
 	"cloud.google.com/go/storage"
 	firebase "firebase.google.com/go"
-	"github.com/jinzhu/gorm"
-	"github.com/lon9/SaySoundCloud/backend/models"
+	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 )
+
+var exts = []string{".mp3", ".wav", ".ogg", ".aac"}
+
+func isValidExt(ext string) bool {
+	for _, e := range exts {
+		if ext == e {
+			return true
+		}
+	}
+	return false
+}
 
 func main() {
 
 	var (
-		bucketURL  string
-		credPath   string
-		dbURL      string
-		dbProvider string
+		bucketURL string
+		credPath  string
 	)
 
 	flag.StringVar(&bucketURL, "b", "", "URL of the storage bucket")
-	flag.StringVar(&credPath, "c", "firebase.json", "Path for file of firebase credential")
-	flag.StringVar(&dbURL, "u", "../../backend/database/dev.db", "Database url")
-	flag.StringVar(&dbProvider, "p", "sqlite3", "Database provider. sqlite3 or postgres or mysql")
+	flag.StringVar(&credPath, "c", "../../backend/config/firebase/firebase.json", "Path for file of firebase credential")
 	flag.Parse()
 
 	if bucketURL == "" {
@@ -35,7 +41,8 @@ func main() {
 		StorageBucket: bucketURL,
 	}
 	opt := option.WithCredentialsFile(credPath)
-	app, err := firebase.NewApp(context.Background(), config, opt)
+	ctx := context.Background()
+	app, err := firebase.NewApp(ctx, config, opt)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -50,23 +57,22 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	db, err := gorm.Open(dbProvider, dbURL)
-	if err != nil {
-		panic(err)
-	}
-
-	var sounds []models.Sound
-	if err := db.Find(&sounds).Error; err != nil {
-		panic(err)
-	}
-
-	for _, sound := range sounds {
-		dst := filepath.Join("sounds", sound.Path)
-
-		ctx := context.Background()
-		obj := bucket.Object(dst)
-
-		// Set cache-control as 1 day
+	it := bucket.Objects(ctx, nil)
+	for {
+		objectAttr, err := it.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		ext := filepath.Ext(objectAttr.Name)
+		if !isValidExt(ext) {
+			continue
+		}
+		log.Printf("Updating %s\n", objectAttr.Name)
+		obj := bucket.Object(objectAttr.Name)
 		if _, err := obj.Update(
 			ctx,
 			storage.ObjectAttrsToUpdate{
