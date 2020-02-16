@@ -90,7 +90,7 @@ func main() {
 			Name: strings.ReplaceAll(filepath.Base(objectAttr.Name), ext, ""),
 			Path: filepath.Base(filepath.Dir(objectAttr.Name)) + "/" + filepath.Base(objectAttr.Name),
 		}
-		if err := db.Create(sound); err != nil {
+		if err := db.Create(sound).Error; err != nil {
 			log.Println(err)
 		}
 	}
