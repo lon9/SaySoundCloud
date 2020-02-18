@@ -14,8 +14,8 @@ SaySoundCloud is a framework to build a cloud native SaySound service for many g
 ## Usage
 
 1. Prepare sounds and execute tools for make database of sounds. (see tools directory)
-1. make `.env` file.
-1. run `docker-compose up -d` to start service.
+1. Make `.env` file.
+1. Run `docker-compose up -d` to start service.
 
 
 ## Contribution
