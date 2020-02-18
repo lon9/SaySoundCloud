@@ -11,6 +11,12 @@ SaySoundCloud is a framework to build a cloud native SaySound service for many g
 * **Client side plugin free**, user just need a browser to browse it, so no need specific client side plugins.
 * **No downloading sounds**, because the sounds is stored on cloud storage, users no need to download them.
 
+## Usage
+
+1. Prepare sounds and execute tools for make database of sounds. (see tools directory)
+1. make `.env` file.
+1. run `docker-compose up -d` to start service.
+
 
 ## Contribution
 
