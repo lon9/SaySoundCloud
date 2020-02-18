@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <p>{{ $t('canCopyDesc') }}</p>
+    <p>{{ $t('canCopyDesc') }} {{ $t('numberOfSounds') }}: {{ soundCount }}</p>
     <SearchBox @search="searchSounds" :place-holder="$t('findSound')" />
     <Pagination @next="next" @prev="prev" :page="page" />
     <div class="panel">
@@ -25,13 +25,22 @@ export default {
   data() {
     return {
       page: 1,
-      query: ''
+      query: '',
+      soundCount: 0
     }
   },
   computed: {
     sounds() {
       return this.$store.state.sounds
     }
+  },
+  async asyncData({ $axios }) {
+    try {
+      const res = await $axios.$get('/sounds/count')
+      return {
+        soundCount: res.result
+      }
+    } catch {}
   },
   async fetch({ store, params }) {
     await store.dispatch('getSounds', {

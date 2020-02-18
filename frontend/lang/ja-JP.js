@@ -28,5 +28,6 @@ export default {
   failedToDelete: '削除に失敗しました。',
   copy: 'コピー',
   renewToken: 'トークン更新',
-  failedToRenew: 'トークンの更新に失敗しました。'
+  failedToRenew: 'トークンの更新に失敗しました。',
+  numberOfSounds: 'サウンド総数'
 }

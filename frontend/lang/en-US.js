@@ -28,5 +28,6 @@ export default {
   failedToDelete: 'Failed to delete',
   copy: 'Copy',
   renewToken: 'Renew token',
-  failedToRenew: 'Failed to renew token'
+  failedToRenew: 'Failed to renew token',
+  numberOfSounds: 'The number of sounds'
 }

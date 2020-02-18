@@ -27,6 +27,13 @@ func (s *Sound) Update() (err error) {
 	return db.Save(s).Error
 }
 
+// Count returns the number of Sounds
+func (s *Sound) Count() (count int, err error) {
+	db := database.GetDB()
+	err = db.Model(s).Count(&count).Error
+	return
+}
+
 // Sounds is slice of sounds
 type Sounds []Sound
 
