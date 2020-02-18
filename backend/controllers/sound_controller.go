@@ -3,10 +3,10 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/lon9/SaySoundCloud/backend/views"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 	"github.com/lon9/SaySoundCloud/backend/models"
+	"github.com/lon9/SaySoundCloud/backend/views"
 )
 
 // SoundController is controller for sounds
@@ -81,6 +81,31 @@ func (sc *SoundController) Index(c echo.Context) (err error) {
 			http.StatusOK,
 			http.StatusText(http.StatusOK),
 			ret,
+		),
+	)
+}
+
+// Count returns the number of sounds
+func (sc *SoundController) Count(c echo.Context) error {
+	var sound models.Sound
+	count, err := sound.Count()
+	if err != nil {
+		c.Logger().Error(err)
+		return c.JSON(
+			http.StatusInternalServerError,
+			newResponse(
+				http.StatusInternalServerError,
+				http.StatusText(http.StatusInternalServerError),
+				nil,
+			),
+		)
+	}
+	return c.JSON(
+		http.StatusOK,
+		newResponse(
+			http.StatusOK,
+			http.StatusText(http.StatusOK),
+			count,
 		),
 	)
 }

@@ -61,6 +61,7 @@ func NewRouter() (*echo.Echo, error) {
 	soundController := controllers.NewSoundController()
 
 	version.GET("/sounds", soundController.Index)
+	version.GET("/sounds/count", soundController.Count)
 
 	return router, nil
 }
