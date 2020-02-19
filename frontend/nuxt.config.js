@@ -65,7 +65,10 @@ export default {
   /*
    ** Global CSS
    */
-  css: ['firebaseui/dist/firebaseui.css'],
+  css: [
+    'firebaseui/dist/firebaseui.css',
+    'vue-slider-component/theme/default.css'
+  ],
   /*
    ** Plugins to load before mounting the App
    */
@@ -73,7 +76,8 @@ export default {
     '~/plugins/firebase',
     '~/plugins/axios',
     { src: '~/plugins/nuxt-client-init.js', ssr: false },
-    { src: '~/plugins/router-option.js', ssr: false }
+    { src: '~/plugins/router-option.js', ssr: false },
+    { src: '~/plugins/slider.js', ssr: false }
   ],
   axios: {
     baseURL: process.env.BASE_URL
