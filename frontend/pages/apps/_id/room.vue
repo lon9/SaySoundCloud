@@ -5,14 +5,17 @@
       <p class="subtitle is-6">@{{ app.user.name }}</p>
       <div v-html="$md.render(app.description)" />
     </div>
-    {{ $t('canCopyDesc') }}
-    <vue-slider
-      v-model="volume"
-      :min="0"
-      :max="2"
-      :interval="0.01"
-      @drag-end="onDragEnd"
-    />
+    {{ $t('canCopyDesc') }}<br />
+    <client-only>
+      <vue-slider
+        v-model="volume"
+        :min="0"
+        :max="2"
+        :interval="0.01"
+        :dragOnClick="true"
+        @drag-end="onDragEnd"
+      />
+    </client-only>
     <div v-if="cmds.length !== 0" class="panel">
       <a
         v-for="(cmd, index) in cmds"
@@ -72,6 +75,11 @@ export default {
     } catch {
       this.$router.push(this.localePath({ path: '/' }))
     }
+    this.volume = localStorage.getItem('volume')
+    if (this.volume === null) {
+      this.volume = 1
+      localStorage.setItem('volume', this.volume)
+    }
   },
   methods: {
     async onModalSubmit(password) {
@@ -91,7 +99,10 @@ export default {
       navigator.clipboard.writeText(cmd.name)
     },
     onDragEnd() {
-      if (this.gainNode !== null) this.gainNode.gain.value = this.volume
+      if (this.gainNode !== null) {
+        this.gainNode.gain.value = this.volume
+      }
+      localStorage.setItem('volume', this.volume)
     },
     connect() {
       const that = this
