@@ -6,6 +6,13 @@
       <div v-html="$md.render(app.description)" />
     </div>
     {{ $t('canCopyDesc') }}
+    <vue-slider
+      v-model="volume"
+      :min="0"
+      :max="2"
+      :interval="0.01"
+      @drag-end="onDragEnd"
+    />
     <div v-if="cmds.length !== 0" class="panel">
       <a
         v-for="(cmd, index) in cmds"
@@ -32,7 +39,9 @@ export default {
     return {
       accessToken: '',
       cmds: [],
-      audioCtx: null
+      audioCtx: null,
+      gainNode: null,
+      volume: 1
     }
   },
   computed: {
@@ -81,6 +90,9 @@ export default {
     copyToClipboard(cmd) {
       navigator.clipboard.writeText(cmd.name)
     },
+    onDragEnd() {
+      if (this.gainNode !== null) this.gainNode.gain.value = this.volume
+    },
     connect() {
       const that = this
       this.$store.dispatch('connectWebsocket', {
@@ -110,13 +122,16 @@ export default {
             url = `${process.env.SOUND_BASE_URL}/${sound.path}`
           }
           try {
-            const source = await that.$axios.$get(url, {
+            const src = await that.$axios.$get(url, {
               responseType: 'arraybuffer'
             })
-            that.audioCtx.decodeAudioData(source, function(buffer) {
+            that.audioCtx.decodeAudioData(src, function(buffer) {
               const source = that.audioCtx.createBufferSource()
               source.buffer = buffer
-              source.connect(that.audioCtx.destination)
+              that.gainNode = that.audioCtx.createGain()
+              source.connect(that.gainNode)
+              that.gainNode.connect(that.audioCtx.destination)
+              that.gainNode.gain.value = that.volume
               source.start(0)
               const time = new Date()
               that.cmds.unshift({
