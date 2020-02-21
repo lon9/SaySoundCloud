@@ -29,12 +29,16 @@ func NewRouter() (*echo.Echo, error) {
 		router.Static("/sounds", "../sounds")
 	}
 
+	indexController := controllers.NewIndexController()
+
+	router.GET("/version", indexController.Version)
+
 	healthController := controllers.NewHealthController()
 
 	router.GET("/health", healthController.Index)
 	router.GET("/secret", healthController.Secret, authMiddleware.Verify)
 
-	version := router.Group("/v1")
+	version := router.Group("/" + c.GetString("server.version"))
 
 	userController := controllers.NewUserController()
 

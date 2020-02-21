@@ -3,6 +3,7 @@ db:
     provider: "sqlite3"
     url: "database/dev.db"
 server:
+    version: "v1"
     port: "3001"
     cors:
         - "http://localhost:3000"
