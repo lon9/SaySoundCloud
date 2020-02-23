@@ -1,0 +1,6 @@
+{
+    "name": "SaySoundCloud",
+    "frontend_url": "example.com",
+    "backend_url": "backend.example.com",
+    "description": "SaySound on cloud"
+}
