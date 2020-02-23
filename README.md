@@ -17,6 +17,10 @@ SaySoundCloud is a framework to build a cloud native SaySound service for many g
 1. Make `.env` file.
 1. Run `docker-compose up -d` to start service.
 
+### site.json
+
+Please create `frontend/static/site.json` for notify information of your service, and then register your site to the repository.
+
 
 ## Contribution
 
