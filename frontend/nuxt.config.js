@@ -124,7 +124,7 @@ export default {
   },
   manifest: {
     name: process.env.PWA_NAME || 'SaySoundCloud',
-    shortname: process.env.PWA_SHORTNAME || 'SSC',
+    short_name: process.env.PWA_SHORTNAME || 'SSC',
     description: process.env.PWA_DESCRIPTION || 'SaySound for cloud'
   },
   /*
