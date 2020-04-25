@@ -14,9 +14,6 @@ import (
 
 	"cloud.google.com/go/storage"
 	firebase "firebase.google.com/go"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"google.golang.org/api/option"
 )
 
