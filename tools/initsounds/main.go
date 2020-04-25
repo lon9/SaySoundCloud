@@ -10,10 +10,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-
-	_ "github.com/jinzhu/gorm/dialects/mysql"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 var exts = []string{".mp3", ".wav", ".ogg", ".aac"}
